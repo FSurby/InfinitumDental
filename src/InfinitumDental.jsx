@@ -785,6 +785,36 @@ export default function App() {
   const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
 
   const lang = 'nb';
+  const [heroSlide, setHeroSlide] = useState(0);
+  const heroSlides = [
+    {
+      eyebrow: 'Lørenskog · Familietannlege',
+      title1: 'Tannhelse som varer',
+      title2: 'livet ut.',
+      lead: 'Hos Infinitum Dental kombinerer vi moderne behandling med rolig oppfølging gjennom alle livets faser – fra første undersøkelse til livslang vedlikehold.',
+      cta: { label: 'Bestill time', href: 'bestill', style: 'pine' },
+      cta2: { label: 'Se nettbutikk', href: 'nettbutikk', style: 'coral' },
+      visual: 'cards',
+    },
+    {
+      eyebrow: 'Nettbutikk',
+      title1: 'Produkter vi',
+      title2: 'anbefaler.',
+      lead: 'Vi selger kun produkter vi selv bruker og tror på i klinikken. Betal ved henting eller få levert hjem.',
+      cta: { label: 'Se alle produkter', href: 'nettbutikk', style: 'pine' },
+      cta2: null,
+      visual: 'shop',
+    },
+    {
+      eyebrow: 'Rask og enkel timebestilling',
+      title1: 'Klar for et',
+      title2: 'friskt smil?',
+      lead: 'Velg behandler, dato og tidspunkt – online, når det passer deg. Første undersøkelse fra 600 kr.',
+      cta: { label: 'Bestill time nå', href: 'bestill', style: 'pine' },
+      cta2: { label: 'Se tjenester', href: 'tjenester', style: 'outline' },
+      visual: 'booking',
+    },
+  ];
 
   const [brands, setBrands] = useState([]);
   const [brandMap, setBrandMap] = useState({});
@@ -1945,6 +1975,12 @@ export default function App() {
     window.storage.set('favorites', JSON.stringify(next), false).catch(() => {});
   };
 
+
+  // --- Hero carousel auto-advance ---
+  useEffect(() => {
+    const t = setInterval(() => setHeroSlide((s) => (s + 1) % heroSlides.length), 5000);
+    return () => clearInterval(t);
+  }, [heroSlides.length]);
 
   // --- Recently viewed (session only) ---
   const trackRecentlyViewed = (productId) => {
@@ -5365,78 +5401,172 @@ export default function App() {
       </header>
 
       {/* Hero */}
-      <section id="hjem" style={{ background: C.bg }}>
-        <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-10 items-center">
-          {/* Left: text */}
-          <div>
-            <SectionLabel>{tr('heroEyebrow', lang)}</SectionLabel>
-            <h1 className="display-font text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink }}>
-              {tr('heroTitle1', lang)} <span style={{ color: C.pine }}>{tr('heroTitle2', lang)}</span>
-            </h1>
-            <p className="text-base md:text-lg mb-8 max-w-md" style={{ color: C.soft }}>
-              {tr('heroLead', lang)}
-            </p>
-            <div className="flex flex-wrap gap-4 mb-8">
-              <a
-                href="#bestill"
-                onClick={(e) => { e.preventDefault(); scrollToId('bestill'); }}
-                className="inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-full focus-ring text-base"
-                style={{ background: C.pine, color: '#fff' }}
-              >
-                {tr('heroBook', lang)} <ArrowRight size={18} />
-              </a>
-              <a
-                href="#nettbutikk"
-                onClick={(e) => { e.preventDefault(); scrollToId('nettbutikk'); }}
-                className="inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-full focus-ring text-base"
-                style={{ background: C.coral, color: '#fff' }}
-              >
-                {tr('heroShop', lang)} <ShoppingBag size={18} />
-              </a>
-            </div>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" style={{ color: C.soft }}>
-              <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
-                <MapPin size={15} color={C.pine} /> Lørenskog sentrum
-              </button>
-              <button onClick={() => scrollToId('apningstider')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
-                <Clock size={15} color={C.pine} /> {getWeekdaySummary(settings.hours)}
-              </button>
-              {settings.whatsapp && (
-                <a href={whatsappLink(settings.whatsapp, 'Hei! Jeg har et spørsmål til Infinitum Dental.')} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-semibold focus-ring rounded" style={{ color: C.pine }}>
-                  <WhatsAppIcon size={15} /> {tr('whatsappUs', lang)}
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* Right: visual cards */}
-          <div className="hidden md:grid grid-cols-2 gap-4">
-            {[
-              { icon: Stethoscope, label: 'Undersøkelse', sub: 'Fra 600 kr', href: 'tjenester' },
-              { icon: Sparkles, label: 'Tannbleking', sub: 'Fra 2 990 kr', href: 'tjenester' },
-              { icon: ShoppingBag, label: 'Nettbutikk', sub: 'Produkter vi anbefaler', href: 'nettbutikk' },
-              { icon: Calendar, label: 'Bestill time', sub: 'Raskt og enkelt', href: 'bestill' },
-            ].map(({ icon: Icon, label, sub, href }) => (
-              <button
-                key={label}
-                onClick={() => scrollToId(href)}
-                className="flex flex-col items-start gap-3 p-5 rounded-2xl text-left focus-ring transition-transform hover:-translate-y-0.5"
-                style={{ background: '#fff', border: `1px solid ${C.line}` }}
-              >
-                <span className="p-2.5 rounded-xl" style={{ background: 'rgba(47,107,94,0.1)' }}>
-                  <Icon size={22} color={C.pine} />
-                </span>
+      {/* Hero carousel */}
+      <section id="hjem" className="relative overflow-hidden" style={{ background: C.bg }}>
+        {/* Slides */}
+        <div className="relative" style={{ minHeight: 420 }}>
+          {heroSlides.map((slide, i) => (
+            <div
+              key={i}
+              className="absolute inset-0 transition-opacity duration-700"
+              style={{ opacity: heroSlide === i ? 1 : 0, pointerEvents: heroSlide === i ? 'auto' : 'none' }}
+            >
+              <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-10 items-center">
+                {/* Left: text */}
                 <div>
-                  <p className="font-bold text-sm" style={{ color: C.ink }}>{label}</p>
-                  <p className="text-xs mt-0.5" style={{ color: C.soft }}>{sub}</p>
+                  <SectionLabel>{slide.eyebrow}</SectionLabel>
+                  <h1 className="display-font text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink }}>
+                    {slide.title1} <span style={{ color: C.pine }}>{slide.title2}</span>
+                  </h1>
+                  <p className="text-base md:text-lg mb-8 max-w-md" style={{ color: C.soft }}>{slide.lead}</p>
+                  <div className="flex flex-wrap gap-4 mb-8">
+                    <a
+                      href={`#${slide.cta.href}`}
+                      onClick={(e) => { e.preventDefault(); scrollToId(slide.cta.href); }}
+                      className="inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-full focus-ring text-base"
+                      style={{ background: C.pine, color: '#fff' }}
+                    >
+                      {slide.cta.label} <ArrowRight size={18} />
+                    </a>
+                    {slide.cta2 && (
+                      <a
+                        href={`#${slide.cta2.href}`}
+                        onClick={(e) => { e.preventDefault(); scrollToId(slide.cta2.href); }}
+                        className="inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-full focus-ring text-base"
+                        style={slide.cta2.style === 'outline'
+                          ? { border: `2px solid ${C.pine}`, color: C.pine }
+                          : { background: C.coral, color: '#fff' }}
+                      >
+                        {slide.cta2.label}
+                      </a>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" style={{ color: C.soft }}>
+                    <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+                      <MapPin size={15} color={C.pine} /> Lørenskog sentrum
+                    </button>
+                    <button onClick={() => scrollToId('apningstider')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+                      <Clock size={15} color={C.pine} /> {getWeekdaySummary(settings.hours)}
+                    </button>
+                    {settings.whatsapp && (
+                      <a href={whatsappLink(settings.whatsapp, 'Hei!')} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-semibold focus-ring rounded" style={{ color: C.pine }}>
+                        <WhatsAppIcon size={15} /> WhatsApp
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </button>
-            ))}
+
+                {/* Right: visual */}
+                <div className="hidden md:flex items-center justify-center">
+                  {slide.visual === 'cards' && (
+                    <div className="grid grid-cols-2 gap-4 w-full">
+                      {[
+                        { icon: Stethoscope, label: 'Undersøkelse', sub: 'Fra 600 kr', href: 'tjenester' },
+                        { icon: Sparkles, label: 'Tannbleking', sub: 'Fra 2 990 kr', href: 'tjenester' },
+                        { icon: ShoppingBag, label: 'Nettbutikk', sub: 'Produkter vi anbefaler', href: 'nettbutikk' },
+                        { icon: Calendar, label: 'Bestill time', sub: 'Raskt og enkelt', href: 'bestill' },
+                      ].map(({ icon: Icon, label, sub, href }) => (
+                        <button key={label} onClick={() => scrollToId(href)} className="flex flex-col items-start gap-3 p-5 rounded-2xl text-left focus-ring transition-transform hover:-translate-y-0.5" style={{ background: '#fff', border: `1px solid ${C.line}` }}>
+                          <span className="p-2.5 rounded-xl" style={{ background: 'rgba(47,107,94,0.1)' }}><Icon size={22} color={C.pine} /></span>
+                          <div>
+                            <p className="font-bold text-sm" style={{ color: C.ink }}>{label}</p>
+                            <p className="text-xs mt-0.5" style={{ color: C.soft }}>{sub}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {slide.visual === 'shop' && (
+                    <div className="grid grid-cols-2 gap-4 w-full">
+                      {allProducts.slice(0, 4).map((p) => {
+                        const Icon = getIcon(p);
+                        const imgs = productImages[p.id] || [];
+                        return (
+                          <button key={p.id} onClick={() => scrollToId('nettbutikk')} className="rounded-2xl overflow-hidden text-left focus-ring hover:-translate-y-0.5 transition-transform" style={{ background: '#fff', border: `1px solid ${C.line}` }}>
+                            <div className="h-28 flex items-center justify-center" style={{ background: 'rgba(47,107,94,0.06)' }}>
+                              {imgs[0] ? <img src={imgs[0].value} alt={p.name} className="h-full w-full object-contain p-3" /> : <Icon size={32} color={C.pine} style={{ opacity: 0.5 }} />}
+                            </div>
+                            <div className="p-3">
+                              <p className="text-xs font-bold line-clamp-1" style={{ color: C.ink }}>{p.name}</p>
+                              <p className="text-xs font-bold mt-0.5" style={{ color: C.pine }}>{formatPrice(p.price)}</p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {slide.visual === 'booking' && (
+                    <div className="w-full rounded-2xl p-8 flex flex-col gap-5" style={{ background: '#fff', border: `1px solid ${C.line}` }}>
+                      <p className="font-bold text-lg" style={{ color: C.ink }}>Bestill time online</p>
+                      {[
+                        { icon: Check, text: 'Velg behandler du ønsker' },
+                        { icon: Calendar, text: 'Velg dato og tidspunkt' },
+                        { icon: Clock, text: 'Bekreftelse på SMS/e-post' },
+                        { icon: MapPin, text: 'Lørenskog sentrum' },
+                      ].map(({ icon: Icon, text }) => (
+                        <div key={text} className="flex items-center gap-3">
+                          <span className="p-2 rounded-full flex-shrink-0" style={{ background: 'rgba(47,107,94,0.1)' }}><Icon size={16} color={C.pine} /></span>
+                          <span className="text-sm font-medium" style={{ color: C.soft }}>{text}</span>
+                        </div>
+                      ))}
+                      <button onClick={() => scrollToId('bestill')} className="mt-2 font-bold py-3 rounded-full focus-ring" style={{ background: C.pine, color: '#fff' }}>
+                        Gå til timebestilling <ArrowRight size={16} className="inline ml-1" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Spacer to set height */}
+          <div className="invisible max-w-6xl mx-auto px-6 py-12 md:py-20">
+            <div className="h-64 md:h-80" />
           </div>
         </div>
 
+        {/* Carousel controls */}
+        <div className="max-w-6xl mx-auto px-6 pb-6 flex items-center gap-4">
+          {/* Prev */}
+          <button
+            onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
+            className="p-2.5 rounded-full focus-ring border"
+            style={{ background: '#fff', borderColor: C.line }}
+            aria-label="Forrige slide"
+          >
+            <ArrowLeft size={18} color={C.ink} />
+          </button>
+
+          {/* Dots */}
+          <div className="flex items-center gap-2">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setHeroSlide(i)}
+                aria-label={`Slide ${i + 1}`}
+                className="rounded-full transition-all focus-ring"
+                style={{
+                  width: heroSlide === i ? 24 : 8,
+                  height: 8,
+                  background: heroSlide === i ? C.pine : C.line,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Next */}
+          <button
+            onClick={() => setHeroSlide((s) => (s + 1) % heroSlides.length)}
+            className="p-2.5 rounded-full focus-ring border"
+            style={{ background: '#fff', borderColor: C.line }}
+            aria-label="Neste slide"
+          >
+            <ArrowRight size={18} color={C.ink} />
+          </button>
+        </div>
+
         {/* Trust badges */}
-        <div className="w-full border-t border-b" style={{ background: C.pine, borderColor: C.pine }}>
+        <div className="w-full" style={{ background: C.pine }}>
           <div className="max-w-6xl mx-auto px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { icon: Check, text: 'Godkjente spesialister' },
@@ -5445,9 +5575,7 @@ export default function App() {
               { icon: MapPin, text: 'Lørenskog sentrum' },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-2.5">
-                <span className="p-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
-                  <Icon size={14} color="#fff" />
-                </span>
+                <span className="p-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}><Icon size={14} color="#fff" /></span>
                 <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>{text}</span>
               </div>
             ))}
