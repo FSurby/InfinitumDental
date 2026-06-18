@@ -1,14 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import InfinitumDental from './InfinitumDental.jsx'
-import { storage } from './storage.js'
-
-// Make storage available globally so InfinitumDental.jsx can use window.storage
-window.storage = storage
+import Bokheimen from './Bokheimen.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <InfinitumDental />
+    <Bokheimen />
   </StrictMode>,
 )
