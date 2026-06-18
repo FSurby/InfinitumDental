@@ -5226,79 +5226,104 @@ export default function App() {
       )}
 
       {/* Header */}
-      <header
-        className="sticky top-0 z-40 w-full"
-        style={{ background: 'rgba(238,241,236,0.92)', backdropFilter: 'blur(8px)', borderBottom: `1px solid ${C.line}` }}
-      >
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-          <a href="#hjem" onClick={(e) => { e.preventDefault(); scrollToId('hjem'); }} className="flex items-center gap-2.5 focus-ring rounded">
-            <InfinityMark size={46} color={C.pine} />
-            <span className="display-font text-2xl font-semibold" style={{ color: C.ink }}>
-              Infinitum <span style={{ color: C.pine }}>Dental</span>
-            </span>
-          </a>
-
-          <nav className="hidden lg:flex items-center gap-6">
-            {NAV_LINKS.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={(e) => { e.preventDefault(); scrollToId(l.href.slice(1)); }}
-                className="text-sm font-semibold focus-ring rounded"
-                style={{ color: C.soft }}
-              >
-                {l.label[lang] || l.label.nb}
+      <header className="sticky top-0 z-40 w-full">
+        {/* Top bar */}
+        <div className="w-full hidden md:block" style={{ background: C.pine }}>
+          <div className="max-w-6xl mx-auto px-6 py-1.5 flex items-center justify-between">
+            <div className="flex items-center gap-5">
+              <a href={`tel:${settings.phone || ''}`} className="flex items-center gap-1.5 text-xs font-medium focus-ring rounded" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                <Phone size={12} /> {settings.phone || '+47 000 00 000'}
               </a>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
-
-            <a
-              href="#bestill"
-              onClick={(e) => { e.preventDefault(); scrollToId('bestill'); }}
-              className="hidden sm:inline-flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-full focus-ring"
-              style={{ background: C.coral, color: '#fff' }}
-            >
-              {tr('heroBook', lang)}
-            </a>
-            <button
-              aria-label="Åpne kurv"
-              onClick={() => setCartOpen(true)}
-              className="relative p-2 rounded-full focus-ring"
-              style={{ background: C.card, border: `1px solid ${C.line}` }}
-            >
-              <ShoppingCart size={20} color={C.ink} />
-              {cartCount > 0 && (
-                <span
-                  className="absolute -top-1 -right-1 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
-                  style={{ background: C.coral, color: '#fff' }}
-                >
-                  {cartCount}
-                </span>
-              )}
-            </button>
-            <button
-              aria-label={currentUser ? 'Min konto' : 'Logg inn'}
-              onClick={() => currentUser ? openAccount() : openAuth('login')}
-              className="hidden sm:flex relative p-2 rounded-full focus-ring items-center justify-center"
-              style={{ background: currentUser ? C.pine : C.card, border: `1px solid ${currentUser ? C.pine : C.line}` }}
-            >
-              {currentUser ? <UserCircle size={20} color="#fff" /> : <UserCircle size={20} color={C.ink} />}
-            </button>
-            <button
-              aria-label="Åpne meny"
-              className="lg:hidden p-2 rounded-full focus-ring"
-              style={{ background: C.card, border: `1px solid ${C.line}` }}
-              onClick={() => setMenuOpen((v) => !v)}
-            >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+              <a href={`mailto:${settings.email || ''}`} className="flex items-center gap-1.5 text-xs font-medium focus-ring rounded" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                <Mail size={12} /> {settings.email || 'post@infinitumdental.no'}
+              </a>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
+              <Clock size={12} /> {getWeekdaySummary(settings.hours)}
+            </div>
           </div>
         </div>
 
+        {/* Main header */}
+        <div className="w-full" style={{ background: 'rgba(238,241,236,0.97)', backdropFilter: 'blur(8px)', borderBottom: `1px solid ${C.line}` }}>
+          <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3">
+            <a href="#hjem" onClick={(e) => { e.preventDefault(); scrollToId('hjem'); }} className="flex items-center gap-2.5 focus-ring rounded flex-shrink-0">
+              <InfinityMark size={40} color={C.pine} />
+              <span className="display-font text-xl font-semibold" style={{ color: C.ink }}>
+                Infinitum <span style={{ color: C.pine }}>Dental</span>
+              </span>
+            </a>
+
+            <div className="flex items-center gap-3">
+              <a
+                href="#bestill"
+                onClick={(e) => { e.preventDefault(); scrollToId('bestill'); }}
+                className="hidden sm:inline-flex items-center gap-2 text-sm font-bold px-5 py-2 rounded-full focus-ring"
+                style={{ background: C.coral, color: '#fff' }}
+              >
+                {tr('heroBook', lang)}
+              </a>
+              <button
+                aria-label="Åpne kurv"
+                onClick={() => setCartOpen(true)}
+                className="relative p-2 rounded-full focus-ring"
+                style={{ background: C.card, border: `1px solid ${C.line}` }}
+              >
+                <ShoppingCart size={20} color={C.ink} />
+                {cartCount > 0 && (
+                  <span
+                    className="absolute -top-1 -right-1 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                    style={{ background: C.coral, color: '#fff' }}
+                  >
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+              <button
+                aria-label={currentUser ? 'Min konto' : 'Logg inn'}
+                onClick={() => currentUser ? openAccount() : openAuth('login')}
+                className="hidden sm:flex relative p-2 rounded-full focus-ring items-center justify-center"
+                style={{ background: currentUser ? C.pine : C.card, border: `1px solid ${currentUser ? C.pine : C.line}` }}
+              >
+                {currentUser ? <UserCircle size={20} color="#fff" /> : <UserCircle size={20} color={C.ink} />}
+              </button>
+              <button
+                aria-label="Åpne meny"
+                className="lg:hidden p-2 rounded-full focus-ring"
+                style={{ background: C.card, border: `1px solid ${C.line}` }}
+                onClick={() => setMenuOpen((v) => !v)}
+              >
+                {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Category nav bar */}
+        <div className="hidden lg:block w-full" style={{ background: '#fff', borderBottom: `1px solid ${C.line}` }}>
+          <div className="max-w-6xl mx-auto px-6">
+            <nav className="flex items-center gap-0">
+              {NAV_LINKS.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={(e) => { e.preventDefault(); scrollToId(l.href.slice(1)); }}
+                  className="text-sm font-semibold px-4 py-3 focus-ring relative transition-colors hover:text-pine group"
+                  style={{ color: C.soft }}
+                >
+                  <span className="relative">
+                    {l.label[lang] || l.label.nb}
+                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" style={{ background: C.pine }} />
+                  </span>
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
         {menuOpen && (
-          <div className="lg:hidden px-6 pb-4 flex flex-col gap-3" style={{ borderTop: `1px solid ${C.line}` }}>
+          <div className="lg:hidden px-6 pb-4 flex flex-col gap-3" style={{ background: '#fff', borderTop: `1px solid ${C.line}` }}>
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
@@ -5340,67 +5365,107 @@ export default function App() {
       </header>
 
       {/* Hero */}
-      <section id="hjem" className="max-w-6xl mx-auto px-6 pt-10 pb-6 md:pt-20 md:pb-10">
-        <div className="max-w-2xl">
-          <SectionLabel>{tr('heroEyebrow', lang)}</SectionLabel>
-          <h1 className="display-font text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink }}>
-            {tr('heroTitle1', lang)} <span style={{ color: C.pine }}>{tr('heroTitle2', lang)}</span>
-          </h1>
-          <p className="text-base md:text-lg mb-8 max-w-md" style={{ color: C.soft }}>
-            {tr('heroLead', lang)}
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <a
-              href="#bestill"
-              onClick={(e) => { e.preventDefault(); scrollToId('bestill'); }}
-              className="inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full focus-ring"
-              style={{ background: C.pine, color: '#fff' }}
-            >
-              {tr('heroBook', lang)} <ArrowRight size={18} />
-            </a>
-            <a
-              href="#nettbutikk"
-              onClick={(e) => { e.preventDefault(); scrollToId('nettbutikk'); }}
-              className="inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full focus-ring"
-              style={{ background: C.coral, color: '#fff' }}
-            >
-              {tr('heroShop', lang)} <ShoppingBag size={18} />
-            </a>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-6 md:mt-10 text-sm" style={{ color: C.soft }}>
-            <button
-              onClick={() => scrollToId('kontakt')}
-              className="flex items-center gap-2 focus-ring rounded hover:underline"
-              style={{ color: C.soft }}
-            >
-              <MapPin size={16} color={C.pine} /> Lørenskog sentrum
-            </button>
-            <button
-              onClick={() => scrollToId('apningstider')}
-              className="flex items-center gap-2 focus-ring rounded hover:underline"
-              style={{ color: C.soft }}
-            >
-              <Clock size={16} color={C.pine} /> {getWeekdaySummary(settings.hours)}
-            </button>
-            {settings.whatsapp && (
+      <section id="hjem" style={{ background: C.bg }}>
+        <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-10 items-center">
+          {/* Left: text */}
+          <div>
+            <SectionLabel>{tr('heroEyebrow', lang)}</SectionLabel>
+            <h1 className="display-font text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink }}>
+              {tr('heroTitle1', lang)} <span style={{ color: C.pine }}>{tr('heroTitle2', lang)}</span>
+            </h1>
+            <p className="text-base md:text-lg mb-8 max-w-md" style={{ color: C.soft }}>
+              {tr('heroLead', lang)}
+            </p>
+            <div className="flex flex-wrap gap-4 mb-8">
               <a
-                href={whatsappLink(settings.whatsapp, 'Hei! Jeg har et spørsmål til Infinitum Dental.')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 font-semibold focus-ring rounded"
-                style={{ color: C.pine }}
+                href="#bestill"
+                onClick={(e) => { e.preventDefault(); scrollToId('bestill'); }}
+                className="inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-full focus-ring text-base"
+                style={{ background: C.pine, color: '#fff' }}
               >
-                <WhatsAppIcon size={16} /> {tr('whatsappUs', lang)}
+                {tr('heroBook', lang)} <ArrowRight size={18} />
               </a>
-            )}
+              <a
+                href="#nettbutikk"
+                onClick={(e) => { e.preventDefault(); scrollToId('nettbutikk'); }}
+                className="inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-full focus-ring text-base"
+                style={{ background: C.coral, color: '#fff' }}
+              >
+                {tr('heroShop', lang)} <ShoppingBag size={18} />
+              </a>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" style={{ color: C.soft }}>
+              <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+                <MapPin size={15} color={C.pine} /> Lørenskog sentrum
+              </button>
+              <button onClick={() => scrollToId('apningstider')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+                <Clock size={15} color={C.pine} /> {getWeekdaySummary(settings.hours)}
+              </button>
+              {settings.whatsapp && (
+                <a href={whatsappLink(settings.whatsapp, 'Hei! Jeg har et spørsmål til Infinitum Dental.')} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-semibold focus-ring rounded" style={{ color: C.pine }}>
+                  <WhatsAppIcon size={15} /> {tr('whatsappUs', lang)}
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Right: visual cards */}
+          <div className="hidden md:grid grid-cols-2 gap-4">
+            {[
+              { icon: Stethoscope, label: 'Undersøkelse', sub: 'Fra 600 kr', href: 'tjenester' },
+              { icon: Sparkles, label: 'Tannbleking', sub: 'Fra 2 990 kr', href: 'tjenester' },
+              { icon: ShoppingBag, label: 'Nettbutikk', sub: 'Produkter vi anbefaler', href: 'nettbutikk' },
+              { icon: Calendar, label: 'Bestill time', sub: 'Raskt og enkelt', href: 'bestill' },
+            ].map(({ icon: Icon, label, sub, href }) => (
+              <button
+                key={label}
+                onClick={() => scrollToId(href)}
+                className="flex flex-col items-start gap-3 p-5 rounded-2xl text-left focus-ring transition-transform hover:-translate-y-0.5"
+                style={{ background: '#fff', border: `1px solid ${C.line}` }}
+              >
+                <span className="p-2.5 rounded-xl" style={{ background: 'rgba(47,107,94,0.1)' }}>
+                  <Icon size={22} color={C.pine} />
+                </span>
+                <div>
+                  <p className="font-bold text-sm" style={{ color: C.ink }}>{label}</p>
+                  <p className="text-xs mt-0.5" style={{ color: C.soft }}>{sub}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Trust badges */}
+        <div className="w-full border-t border-b" style={{ background: C.pine, borderColor: C.pine }}>
+          <div className="max-w-6xl mx-auto px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: Check, text: 'Godkjente spesialister' },
+              { icon: Clock, text: 'Fleksible timeavtaler' },
+              { icon: ShoppingCart, text: 'Produkter fra klinikken' },
+              { icon: MapPin, text: 'Lørenskog sentrum' },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-2.5">
+                <span className="p-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                  <Icon size={14} color="#fff" />
+                </span>
+                <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>{text}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Shop */}
-      <section id="nettbutikk" className="max-w-6xl mx-auto px-6 py-8 md:py-12">
-        <h2 className="display-font text-3xl md:text-4xl font-bold mb-3">{tr('shopTitle', lang)}</h2>
-        <p className="max-w-xl mb-8" style={{ color: C.soft }}>{tr('shopLead', lang)}</p>
+      <section id="nettbutikk" className="max-w-6xl mx-auto px-6 py-12 md:py-16">
+        <div className="flex items-end justify-between mb-8">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: C.coral }}>Nettbutikk</p>
+            <h2 className="display-font text-3xl md:text-4xl font-bold">{tr('shopTitle', lang)}</h2>
+          </div>
+          <a href="#produktliste" onClick={(e) => { e.preventDefault(); scrollToId('produktliste'); }} className="hidden sm:inline-flex items-center gap-1.5 text-sm font-bold focus-ring rounded hover:underline" style={{ color: C.pine }}>
+            Se alle produkter <ArrowRight size={15} />
+          </a>
+        </div>
 
         {(() => {
           const renderMiniCard = (p) => {
@@ -5408,33 +5473,47 @@ export default function App() {
             const images = productImages[p.id] || [];
             const discountPct = getEffectiveDiscount(p.id);
             const discounted = applyDiscount(p.price, discountPct);
+            const isOut = (stock[p.id] ?? null) === 0;
             return (
               <button
                 key={p.id}
                 onClick={() => { setSelectedProduct(p); setGalleryIndex(0); window.scrollTo(0, 0); }}
-                className="text-left rounded-2xl overflow-hidden flex flex-col focus-ring transition-transform hover:-translate-y-0.5"
-                style={{ background: C.card, border: `1px solid ${C.line}` }}
+                className="text-left rounded-2xl overflow-hidden flex flex-col focus-ring group"
+                style={{ background: '#fff', border: `1px solid ${C.line}`, transition: 'box-shadow 0.18s, transform 0.18s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(47,107,94,0.13)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = ''; e.currentTarget.style.transform = ''; }}
               >
-                <div className="h-36 flex items-center justify-center relative" style={{ background: 'rgba(47,107,94,0.08)' }}>
+                <div className="h-48 flex items-center justify-center relative overflow-hidden" style={{ background: 'rgba(47,107,94,0.06)' }}>
                   {images.length > 0 ? (
-                    <img src={images[0].value} alt={p.name} className="w-full h-full object-contain" />
+                    <img src={images[0].value} alt={p.name} className="w-full h-full object-contain p-4 transition-transform group-hover:scale-105" />
                   ) : (
-                    <Icon size={36} color={C.pine} />
+                    <Icon size={48} color={C.pine} style={{ opacity: 0.6 }} />
                   )}
                   {discountPct ? (
-                    <span className="absolute top-2 left-2 text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: C.coral, color: '#fff' }}>-{discountPct}%</span>
+                    <span className="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: C.coral, color: '#fff' }}>-{discountPct}%</span>
+                  ) : p.tag ? (
+                    <span className="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: C.gold, color: '#fff' }}>{p.tag}</span>
                   ) : null}
-                </div>
-                <div className="p-3">
-                  <p className="text-sm font-semibold leading-snug mb-1 line-clamp-2">{p.name}</p>
-                  {discountPct ? (
-                    <span className="flex items-center gap-1.5">
-                      <span className="text-xs line-through" style={{ color: C.soft }}>{formatPrice(p.price)}</span>
-                      <span className="text-sm font-bold" style={{ color: C.coral }}>{formatPrice(discounted)}</span>
-                    </span>
-                  ) : (
-                    <span className="text-sm font-bold" style={{ color: C.pine }}>{formatPrice(p.price)}</span>
+                  {isOut && (
+                    <span className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: C.ink, color: '#fff' }}>Utsolgt</span>
                   )}
+                </div>
+                <div className="p-4 flex flex-col flex-1">
+                  {p.sku && <p className="text-xs font-mono mb-1" style={{ color: C.soft }}>{p.sku}</p>}
+                  <p className="text-sm font-bold leading-snug mb-2 line-clamp-2 flex-1" style={{ color: C.ink }}>{p.name}</p>
+                  <div className="flex items-center justify-between mt-auto">
+                    {discountPct ? (
+                      <span className="flex flex-col">
+                        <span className="text-xs line-through" style={{ color: C.soft }}>{formatPrice(p.price)}</span>
+                        <span className="text-base font-bold" style={{ color: C.coral }}>{formatPrice(discounted)}</span>
+                      </span>
+                    ) : (
+                      <span className="text-base font-bold" style={{ color: C.pine }}>{formatPrice(p.price)}</span>
+                    )}
+                    <span className="p-2 rounded-full" style={{ background: 'rgba(47,107,94,0.1)' }}>
+                      <ShoppingCart size={15} color={C.pine} />
+                    </span>
+                  </div>
                 </div>
               </button>
             );
@@ -5447,21 +5526,23 @@ export default function App() {
           return (
             <>
               {featuredProducts.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="display-font text-xl font-bold mb-4 flex items-center gap-2">
-                    <Star size={18} color={C.gold} /> {tr('featuredTitle', lang)}
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div className="mb-12">
+                  <div className="flex items-center gap-2 mb-5">
+                    <Star size={16} color={C.gold} fill={C.gold} />
+                    <h3 className="display-font text-xl font-bold">{tr('featuredTitle', lang)}</h3>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
                     {featuredProducts.map(renderMiniCard)}
                   </div>
                 </div>
               )}
               {offerProducts.length > 0 && (
                 <div className="mb-10">
-                  <h3 className="display-font text-xl font-bold mb-4 flex items-center gap-2">
-                    <Percent size={18} color={C.coral} /> {tr('offersTitle', lang)}
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-2 mb-5">
+                    <Percent size={16} color={C.coral} />
+                    <h3 className="display-font text-xl font-bold">{tr('offersTitle', lang)}</h3>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
                     {offerProducts.map(renderMiniCard)}
                   </div>
                 </div>
