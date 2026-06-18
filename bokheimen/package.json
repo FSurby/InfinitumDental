@@ -1,0 +1,13 @@
+{
+  "name": "bokheimen",
+  "version": "1.0.0",
+  "description": "Norsk barnebok-leser – Express proxy + React frontend",
+  "private": true,
+  "scripts": {
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build"
+  },
+  "readme": "Kjør 'npm run install:all', så start server og klient i hvert sitt terminalvindu."
+}
