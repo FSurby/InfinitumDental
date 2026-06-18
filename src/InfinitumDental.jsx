@@ -5621,18 +5621,16 @@ export default function App() {
       {/* Hero */}
       {/* Hero carousel */}
       <section id="hjem" style={{ background: C.bg }}>
-        {/* Slides — active slide sets height, inactive slides overlay with opacity 0 */}
-        <div className="relative">
+        {/* Slides — CSS grid stacking keeps height = tallest slide, no jumping */}
+        <div style={{ display: 'grid' }}>
           {heroSlides.map((slide, i) => (
             <div
               key={i}
               className="transition-opacity duration-700"
               style={{
+                gridArea: '1 / 1',
                 opacity: heroSlide === i ? 1 : 0,
                 pointerEvents: heroSlide === i ? 'auto' : 'none',
-                position: heroSlide === i ? 'relative' : 'absolute',
-                top: 0, left: 0, right: 0,
-                zIndex: heroSlide === i ? 1 : 0,
               }}
             >
               <div className="max-w-6xl mx-auto px-6 py-8 md:py-14 grid md:grid-cols-2 gap-10 items-center">
