@@ -5263,22 +5263,6 @@ export default function App() {
 
       {/* Header */}
       <header className="sticky top-0 z-40 w-full">
-        {/* Top bar */}
-        <div className="w-full hidden md:block" style={{ background: C.pine }}>
-          <div className="max-w-6xl mx-auto px-6 py-1.5 flex items-center justify-between">
-            <div className="flex items-center gap-5">
-              <a href={`tel:${settings.phone || ''}`} className="flex items-center gap-1.5 text-xs font-medium focus-ring rounded" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                <Phone size={12} /> {settings.phone || '+47 000 00 000'}
-              </a>
-              <a href={`mailto:${settings.email || ''}`} className="flex items-center gap-1.5 text-xs font-medium focus-ring rounded" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                <Mail size={12} /> {settings.email || 'post@infinitumdental.no'}
-              </a>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
-              <Clock size={12} /> {getWeekdaySummary(settings.hours)}
-            </div>
-          </div>
-        </div>
 
         {/* Main header */}
         <div className="w-full" style={{ background: 'rgba(238,241,236,0.97)', backdropFilter: 'blur(8px)', borderBottom: `1px solid ${C.line}` }}>
