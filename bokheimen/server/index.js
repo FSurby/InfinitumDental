@@ -1,6 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -19,16 +23,13 @@ async function fetchJson(url) {
 }
 
 // ─── Søk ──────────────────────────────────────────────────────────────────
-// GET /api/search?q=barnebok&page=0&size=24
 app.get('/api/search', async (req, res) => {
   try {
     const { q = 'barnebok', page = '0', size = '24' } = req.query;
-
     const params = new URLSearchParams({ q, size, page });
     params.append('filter', 'mediatype:bøker');
     params.append('filter', 'digital:Ja');
     params.append('filter', 'contentClasses:public');
-
     const data = await fetchJson(`${NB_API}/items?${params}`);
     res.json(data);
   } catch (err) {
@@ -38,7 +39,6 @@ app.get('/api/search', async (req, res) => {
 });
 
 // ─── Enkeltbok ─────────────────────────────────────────────────────────────
-// GET /api/book/:id
 app.get('/api/book/:id', async (req, res) => {
   try {
     const id = decodeURIComponent(req.params.id);
@@ -50,20 +50,12 @@ app.get('/api/book/:id', async (req, res) => {
   }
 });
 
-// ─── Tilemap (sidetall + bildeinfo) ────────────────────────────────────────
-// GET /api/tilemap?urn=URN:NBN:no-nb_digibok_...
+// ─── Tilemap ───────────────────────────────────────────────────────────────
 app.get('/api/tilemap', async (req, res) => {
   try {
     const { urn } = req.query;
     if (!urn) return res.status(400).json({ error: 'URN mangler' });
-
-    const params = new URLSearchParams({
-      viewer: 'html',
-      pagetype: '',
-      format: 'json',
-      URN: urn,
-    });
-
+    const params = new URLSearchParams({ viewer: 'html', pagetype: '', format: 'json', URN: urn });
     const data = await fetchJson(`${NB_SERVICES}/tilesv2/tilemap?${params}`);
     res.json(data);
   } catch (err) {
@@ -75,10 +67,18 @@ app.get('/api/tilemap', async (req, res) => {
 // ─── Helse-sjekk ───────────────────────────────────────────────────────────
 app.get('/api/health', (_, res) => res.json({ ok: true, tid: new Date().toISOString() }));
 
+// ─── Servér React-appen (produksjon) ───────────────────────────────────────
+const clientDist = join(__dirname, '../client/dist');
+if (existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  // SPA-fallback: alle ikke-API-ruter får index.html
+  app.use((req, res) => {
+    res.sendFile(join(clientDist, 'index.html'));
+  });
+} else {
+  app.get('/', (_, res) => res.send('Bokheimen proxy kjører. Bygg klienten med: npm run build'));
+}
+
 app.listen(PORT, () => {
-  console.log(`\n📚 Bokheimen-proxy kjører på http://localhost:${PORT}`);
-  console.log('   Endepunkter:');
-  console.log('   GET /api/search?q=&page=&size=');
-  console.log('   GET /api/book/:id');
-  console.log('   GET /api/tilemap?urn=\n');
+  console.log(`\n📚 Bokheimen kjører på http://localhost:${PORT}`);
 });

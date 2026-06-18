@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "Norsk barnebok-leser – Express proxy + React frontend",
   "private": true,
-  "scripts": {
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
-    "install:all": "cd server && npm install && cd ../client && npm install",
-    "build": "cd client && npm run build"
+  "engines": {
+    "node": ">=18"
   },
-  "readme": "Kjør 'npm run install:all', så start server og klient i hvert sitt terminalvindu."
+  "scripts": {
+    "build": "npm --prefix client install && npm --prefix client run build",
+    "start": "npm --prefix server install && node server/index.js",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "install:all": "npm --prefix server install && npm --prefix client install"
+  }
 }
