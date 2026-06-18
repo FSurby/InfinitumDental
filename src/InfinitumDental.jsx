@@ -5388,14 +5388,14 @@ export default function App() {
       {/* Hero carousel */}
       <section id="hjem" style={{ background: C.bg }}>
         {/* Slides — fixed height container so nothing overflows onto controls */}
-        <div className="relative overflow-hidden" style={{ height: 480 }}>
+        <div className="relative overflow-hidden" style={{ height: 560 }}>
           {heroSlides.map((slide, i) => (
             <div
               key={i}
               className="absolute inset-0 transition-opacity duration-700"
               style={{ opacity: heroSlide === i ? 1 : 0, pointerEvents: heroSlide === i ? 'auto' : 'none', overflowY: 'hidden' }}
             >
-              <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-10 items-center">
+              <div className="max-w-6xl mx-auto px-6 py-8 md:py-14 grid md:grid-cols-2 gap-10 items-center">
                 {/* Left: text */}
                 <div>
                   <SectionLabel>{slide.eyebrow}</SectionLabel>
