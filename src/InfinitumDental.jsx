@@ -2115,7 +2115,7 @@ export default function App() {
     setSession(user);
     setAuthOpen(false);
     setAuthError('');
-    setAuthForm({ name: '', email: '', password: '', phone: '', address: '' });
+    setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
     showToast(`Velkommen tilbake, ${user.name.split(' ')[0]}!`);
   };
 
@@ -2136,7 +2136,7 @@ export default function App() {
   const openAuth = (mode) => {
     setAuthMode(mode);
     setAuthError('');
-    setAuthForm({ name: '', email: '', password: '', phone: '', address: '' });
+    setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
     setAuthOpen(true);
     setMenuOpen(false);
   };
