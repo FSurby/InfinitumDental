@@ -22,18 +22,31 @@ const C = {
   line: '#DCE2DC',
 };
 
-const SERVICES = [
-  { id: 's1', name: 'Tannundersøkelse', duration: '45 min', price: 890, icon: Stethoscope,
+const SERVICE_ICON_MAP = {
+  stethoscope: Stethoscope,
+  sparkles: Sparkles,
+  sun: Sun,
+  wrench: Wrench,
+  activity: Activity,
+  message: MessageCircle,
+  zap: Zap,
+  heart: Heart,
+  calendar: Calendar,
+  smile: Award,
+};
+
+const DEFAULT_SERVICES = [
+  { id: 's1', name: 'Tannundersøkelse', duration: '45 min', price: 890, iconKey: 'stethoscope',
     desc: 'Grundig sjekk av tenner, tannkjøtt og bittfunksjon, med digital røntgen ved behov.' },
-  { id: 's2', name: 'Tannrens', duration: '45 min', price: 1190, icon: Sparkles,
+  { id: 's2', name: 'Tannrens', duration: '45 min', price: 1190, iconKey: 'sparkles',
     desc: 'Profesjonell rens og polering for et friskt og rent munnhulemiljø.' },
-  { id: 's3', name: 'Tannbleking', duration: '60 min', price: 2900, icon: Sun,
+  { id: 's3', name: 'Tannbleking', duration: '60 min', price: 2900, iconKey: 'sun',
     desc: 'Skånsom, klinisk bleking for et synlig lysere smil.' },
-  { id: 's4', name: 'Fylling', duration: '30 min', price: 1450, icon: Wrench,
+  { id: 's4', name: 'Fylling', duration: '30 min', price: 1450, iconKey: 'wrench',
     desc: 'Tannfargede fyllinger som reparerer hull og skader skånsomt.' },
-  { id: 's5', name: 'Rotfylling', duration: '90 min', price: 4500, icon: Activity,
+  { id: 's5', name: 'Rotfylling', duration: '90 min', price: 4500, iconKey: 'activity',
     desc: 'Behandling av infisert tannrot for å redde din egen tann.' },
-  { id: 's6', name: 'Implantatkonsultasjon', duration: '30 min', price: 0, icon: MessageCircle,
+  { id: 's6', name: 'Implantatkonsultasjon', duration: '30 min', price: 0, iconKey: 'message',
     desc: 'Uforpliktende samtale om implantatbehandling og kostnadsoverslag.' },
 ];
 
@@ -781,40 +794,57 @@ export default function App() {
   const [lookupResult, setLookupResult] = useState(undefined);
 
   const [waitlist, setWaitlist] = useState([]);
-  const [waitlistForm, setWaitlistForm] = useState({ name: '', phone: '', service: SERVICES[0].id, note: '' });
+  const [waitlistForm, setWaitlistForm] = useState({ name: '', phone: '', service: DEFAULT_SERVICES[0].id, note: '' });
   const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+
+  const [services, setServices] = useState(DEFAULT_SERVICES);
+  const [heroSlidesList, setHeroSlidesList] = useState(null); // null = not loaded yet
 
   const lang = 'nb';
   const [heroSlide, setHeroSlide] = useState(0);
-  const heroSlides = [
+
+  const DEFAULT_HERO_SLIDES = [
     {
+      id: 'h1',
       eyebrow: 'Lørenskog · Familietannlege',
       title1: 'Tannhelse som varer',
       title2: 'livet ut.',
       lead: 'Hos Infinitum Dental kombinerer vi moderne behandling med rolig oppfølging gjennom alle livets faser – fra første undersøkelse til livslang vedlikehold.',
-      cta: { label: 'Bestill time', href: 'bestill', style: 'pine' },
+      cta: { label: 'Bestill time', href: 'bestill' },
       cta2: { label: 'Se nettbutikk', href: 'nettbutikk', style: 'coral' },
       visual: 'cards',
     },
     {
+      id: 'h2',
       eyebrow: 'Nettbutikk',
       title1: 'Produkter vi',
       title2: 'anbefaler.',
       lead: 'Vi selger kun produkter vi selv bruker og tror på i klinikken. Betal ved henting eller få levert hjem.',
-      cta: { label: 'Se alle produkter', href: 'nettbutikk', style: 'pine' },
+      cta: { label: 'Se alle produkter', href: 'nettbutikk' },
       cta2: null,
       visual: 'shop',
     },
     {
+      id: 'h3',
       eyebrow: 'Rask og enkel timebestilling',
       title1: 'Klar for et',
       title2: 'friskt smil?',
       lead: 'Velg behandler, dato og tidspunkt – online, når det passer deg. Første undersøkelse fra 600 kr.',
-      cta: { label: 'Bestill time nå', href: 'bestill', style: 'pine' },
+      cta: { label: 'Bestill time nå', href: 'bestill' },
       cta2: { label: 'Se tjenester', href: 'tjenester', style: 'outline' },
       visual: 'booking',
     },
   ];
+  const heroSlides = heroSlidesList ?? DEFAULT_HERO_SLIDES;
+
+  const DEFAULT_TRUST_BADGES = [
+    { id: 'tb1', iconKey: 'check', text: 'Godkjente spesialister' },
+    { id: 'tb2', iconKey: 'clock', text: 'Fleksible timeavtaler' },
+    { id: 'tb3', iconKey: 'cart', text: 'Produkter fra klinikken' },
+    { id: 'tb4', iconKey: 'mappin', text: 'Lørenskog sentrum' },
+  ];
+  const BADGE_ICON_MAP = { check: Check, clock: Clock, cart: ShoppingCart, mappin: MapPin, star: Star, heart: Heart, sparkles: Sparkles, award: Award, zap: Zap };
+  const [trustBadges, setTrustBadges] = useState(DEFAULT_TRUST_BADGES);
 
   const [brands, setBrands] = useState([]);
   const [brandMap, setBrandMap] = useState({});
@@ -1124,6 +1154,18 @@ export default function App() {
         if (mounted) setClosedDates(DEFAULT_CLOSED_DATES);
         window.storage.set('closed-dates', JSON.stringify(DEFAULT_CLOSED_DATES), true).catch(() => {});
       }
+      try {
+        const res = await window.storage.get('hero-slides', true);
+        if (mounted && res && res.value) setHeroSlidesList(JSON.parse(res.value));
+      } catch (err) {}
+      try {
+        const res = await window.storage.get('clinic-services', true);
+        if (mounted && res && res.value) setServices(JSON.parse(res.value));
+      } catch (err) {}
+      try {
+        const res = await window.storage.get('trust-badges', true);
+        if (mounted && res && res.value) setTrustBadges(JSON.parse(res.value));
+      } catch (err) {}
       try {
         const res = await window.storage.get('product-images', true);
         if (mounted && res && res.value) {
@@ -1735,7 +1777,7 @@ export default function App() {
       name: waitlistForm.name.trim(),
       phone: waitlistForm.phone.trim(),
       serviceId: waitlistForm.service,
-      serviceName: SERVICES.find((s) => s.id === waitlistForm.service)?.name || '',
+      serviceName: services.find((s) => s.id === waitlistForm.service)?.name || '',
       note: waitlistForm.note.trim(),
       createdAt: new Date().toISOString(),
       status: 'Venter',
@@ -4100,7 +4142,7 @@ export default function App() {
     if (!booking.date || !booking.time || !booking.name || !booking.phone) return;
     if (getClosureReason(booking.date, closedDates, settings.hours)) return;
     const ref = 'INF-' + Math.random().toString(36).slice(2, 7).toUpperCase();
-    const serviceName = SERVICES.find((s) => s.id === booking.service)?.name || '';
+    const serviceName = services.find((s) => s.id === booking.service)?.name || '';
     const practitionerName = booking.practitioner === 'any'
       ? tr('anyPractitioner', lang)
       : (teamMembers.find((m) => m.id === booking.practitioner)?.name || tr('anyPractitioner', lang));
@@ -4130,7 +4172,7 @@ export default function App() {
     setBooking({ service: SERVICES[0].id, practitioner: 'any', date: '', time: '', name: '', phone: '', email: '', message: '' });
   };
 
-  const selectedService = SERVICES.find((s) => s.id === booking.service);
+  const selectedService = services.find((s) => s.id === booking.service);
 
   const renderCartDrawer = () => (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -5547,17 +5589,15 @@ export default function App() {
         {/* Trust badges */}
         <div className="w-full" style={{ background: C.pine }}>
           <div className="max-w-6xl mx-auto px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { icon: Check, text: 'Godkjente spesialister' },
-              { icon: Clock, text: 'Fleksible timeavtaler' },
-              { icon: ShoppingCart, text: 'Produkter fra klinikken' },
-              { icon: MapPin, text: 'Lørenskog sentrum' },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-center gap-2.5">
+            {trustBadges.map(({ id, iconKey, text }) => {
+              const Icon = BADGE_ICON_MAP[iconKey] || Check;
+              return (
+              <div key={id} className="flex items-center gap-2.5">
                 <span className="p-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}><Icon size={14} color="#fff" /></span>
                 <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>{text}</span>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -5988,8 +6028,8 @@ export default function App() {
         <h2 className="display-font text-3xl md:text-4xl font-bold mb-3">{tr('servicesTitle', lang)}</h2>
         <p className="max-w-xl mb-10" style={{ color: C.soft }}>{tr('servicesLead', lang)}</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {SERVICES.map((s) => {
-            const Icon = s.icon;
+          {services.map((s) => {
+            const Icon = SERVICE_ICON_MAP[s.iconKey] || Stethoscope;
             return (
               <div
                 key={s.id}
@@ -6034,7 +6074,7 @@ export default function App() {
                 </p>
                 <dl className="text-sm grid grid-cols-2 gap-y-2 mb-6">
                   <dt style={{ color: C.soft }}>Referanse</dt><dd className="font-bold text-right">{confirmed.ref}</dd>
-                  <dt style={{ color: C.soft }}>Behandling</dt><dd className="text-right">{SERVICES.find(s => s.id === confirmed.service)?.name}</dd>
+                  <dt style={{ color: C.soft }}>Behandling</dt><dd className="text-right">{services.find(s => s.id === confirmed.service)?.name}</dd>
                   <dt style={{ color: C.soft }}>{tr('fieldPractitioner', lang)}</dt><dd className="text-right">{confirmed.practitionerName}</dd>
                   <dt style={{ color: C.soft }}>Dato</dt><dd className="text-right">{confirmed.date}</dd>
                   <dt style={{ color: C.soft }}>Klokkeslett</dt><dd className="text-right">{confirmed.time}</dd>
@@ -6049,7 +6089,7 @@ export default function App() {
                     {fillTemplate(emailTemplates.booking.subject, {
                       ref: confirmed.ref,
                       name: confirmed.name,
-                      service: SERVICES.find((s) => s.id === confirmed.service)?.name || '',
+                      service: services.find((s) => s.id === confirmed.service)?.name || '',
                       date: confirmed.date,
                       time: confirmed.time,
                     })}
@@ -6058,7 +6098,7 @@ export default function App() {
                     {fillTemplate(emailTemplates.booking.body, {
                       ref: confirmed.ref,
                       name: confirmed.name,
-                      service: SERVICES.find((s) => s.id === confirmed.service)?.name || '',
+                      service: services.find((s) => s.id === confirmed.service)?.name || '',
                       date: confirmed.date,
                       time: confirmed.time,
                       address: settings.address,
@@ -6085,7 +6125,7 @@ export default function App() {
                     className="w-full rounded-lg px-4 py-3 text-sm focus-ring"
                     style={{ border: `1px solid ${C.line}`, background: '#fff' }}
                   >
-                    {SERVICES.map((s) => (
+                    {services.map((s) => (
                       <option key={s.id} value={s.id}>{s.name} – {s.duration} – {formatPrice(s.price)}</option>
                     ))}
                   </select>
@@ -6399,7 +6439,7 @@ export default function App() {
                 className="rounded-lg px-4 py-3 text-sm focus-ring sm:col-span-2"
                 style={{ border: `1px solid ${C.line}`, background: C.card }}
               >
-                {SERVICES.map((s) => (
+                {services.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
               </select>
