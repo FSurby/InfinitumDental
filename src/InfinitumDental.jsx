@@ -543,7 +543,7 @@ const DEFAULT_SETTINGS = {
   shippingCost: 59,
 };
 
-const DEFAULT_FEATURED = ['p1', 'p8', 'p3', 'p6'];
+const DEFAULT_FEATURED = ['p1', 'p3', 'p6'];
 
 function getWeekdaySummary(hours) {
   const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
