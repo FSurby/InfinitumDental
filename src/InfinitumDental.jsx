@@ -5449,7 +5449,7 @@ export default function App() {
       </header>
 
       {/* Hero */}
-      <section id="hjem" className="max-w-6xl mx-auto px-6 pt-10 pb-12 md:pt-20 md:pb-24">
+      <section id="hjem" className="max-w-6xl mx-auto px-6 pt-10 pb-6 md:pt-20 md:pb-10">
         <div className="max-w-2xl">
           <SectionLabel>{tr('heroEyebrow', lang)}</SectionLabel>
           <h1 className="display-font text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink }}>
@@ -5507,7 +5507,7 @@ export default function App() {
       </section>
 
       {/* Shop */}
-      <section id="nettbutikk" className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+      <section id="nettbutikk" className="max-w-6xl mx-auto px-6 py-8 md:py-12">
         <h2 className="display-font text-3xl md:text-4xl font-bold mb-3">{tr('shopTitle', lang)}</h2>
         <p className="max-w-xl mb-8" style={{ color: C.soft }}>{tr('shopLead', lang)}</p>
 
