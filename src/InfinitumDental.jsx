@@ -5507,7 +5507,7 @@ export default function App() {
                 {/* Left: text */}
                 <div>
                   <SectionLabel>{slide.eyebrow}</SectionLabel>
-                  <h1 className="display-font text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink }}>
+                  <h1 className="display-font text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
                     {slide.title1} <span style={{ color: C.pine }}>{slide.title2}</span>
                   </h1>
                   <p className="text-base md:text-lg mb-8 max-w-md" style={{ color: C.soft }}>{slide.lead}</p>
