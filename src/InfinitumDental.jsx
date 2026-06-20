@@ -784,7 +784,7 @@ export default function App() {
   const [waitlistForm, setWaitlistForm] = useState({ name: '', phone: '', service: SERVICES[0].id, note: '' });
   const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
 
-  const [lang, setLang] = useState('nb');
+  const lang = 'nb';
 
   const [brands, setBrands] = useState([]);
   const [brandMap, setBrandMap] = useState({});
@@ -5238,14 +5238,7 @@ export default function App() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLang((l) => (l === 'nb' ? 'en' : 'nb'))}
-              className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-2 rounded-full focus-ring"
-              style={{ background: C.card, border: `1px solid ${C.line}`, color: C.ink }}
-              aria-label="Bytt språk / Switch language"
-            >
-              {lang === 'nb' ? <><FlagGB size={18} /> EN</> : <><FlagNO size={18} /> NO</>}
-            </button>
+
             <a
               href="#bestill"
               onClick={(e) => { e.preventDefault(); scrollToId('bestill'); }}
