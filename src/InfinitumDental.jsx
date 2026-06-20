@@ -114,7 +114,10 @@ function getIcon(product) {
 
 function scrollToId(id) {
   const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.scrollY - 90;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }
 }
 
 function buildCartKey(productId, variants, selections) {
