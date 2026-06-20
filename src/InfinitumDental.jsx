@@ -5526,7 +5526,7 @@ export default function App() {
         </div>
 
         {/* Carousel controls */}
-        <div className="max-w-6xl mx-auto px-6 pb-6 flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-6 pb-6 flex items-center justify-center gap-4">
           {/* Prev */}
           <button
             onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
