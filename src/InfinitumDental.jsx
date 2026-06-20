@@ -717,7 +717,7 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState({});
-  const [booking, setBooking] = useState({ service: SERVICES[0].id, practitioner: 'any', date: '', time: '', name: '', phone: '', email: '', message: '' });
+  const [booking, setBooking] = useState({ service: DEFAULT_SERVICES[0].id, practitioner: 'any', date: '', time: '', name: '', phone: '', email: '', message: '' });
   const [confirmed, setConfirmed] = useState(null);
   const [orderDone, setOrderDone] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -1783,7 +1783,7 @@ export default function App() {
       status: 'Venter',
     };
     saveWaitlist([...waitlist, entry]);
-    setWaitlistForm({ name: '', phone: '', service: SERVICES[0].id, note: '' });
+    setWaitlistForm({ name: '', phone: '', service: DEFAULT_SERVICES[0].id, note: '' });
     setWaitlistSubmitted(true);
   };
 
@@ -4356,7 +4356,7 @@ export default function App() {
 
   const resetBooking = () => {
     setConfirmed(null);
-    setBooking({ service: SERVICES[0].id, practitioner: 'any', date: '', time: '', name: '', phone: '', email: '', message: '' });
+    setBooking({ service: DEFAULT_SERVICES[0].id, practitioner: 'any', date: '', time: '', name: '', phone: '', email: '', message: '' });
   };
 
   const selectedService = services.find((s) => s.id === booking.service);
