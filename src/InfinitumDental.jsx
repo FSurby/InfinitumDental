@@ -5523,46 +5523,37 @@ export default function App() {
           <div className="invisible max-w-6xl mx-auto px-6 py-12 md:py-20">
             <div className="h-64 md:h-80" />
           </div>
-        </div>
 
-        {/* Carousel controls */}
-        <div className="max-w-6xl mx-auto px-6 pb-6 flex items-center justify-center gap-4">
-          {/* Prev */}
-          <button
-            onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
-            className="p-2.5 rounded-full focus-ring border"
-            style={{ background: '#fff', borderColor: C.line }}
-            aria-label="Forrige slide"
-          >
-            <ArrowLeft size={18} color={C.ink} />
-          </button>
-
-          {/* Dots */}
-          <div className="flex items-center gap-2">
-            {heroSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setHeroSlide(i)}
-                aria-label={`Slide ${i + 1}`}
-                className="rounded-full transition-all focus-ring"
-                style={{
-                  width: heroSlide === i ? 24 : 8,
-                  height: 8,
-                  background: heroSlide === i ? C.pine : C.line,
-                }}
-              />
-            ))}
+          {/* Carousel controls — absolute so they're always on top and clickable */}
+          <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-4 z-10">
+            <button
+              onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
+              className="p-2.5 rounded-full border focus-ring"
+              style={{ background: '#fff', borderColor: C.line }}
+              aria-label="Forrige slide"
+            >
+              <ArrowLeft size={18} color={C.ink} />
+            </button>
+            <div className="flex items-center gap-2">
+              {heroSlides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setHeroSlide(i)}
+                  aria-label={`Slide ${i + 1}`}
+                  className="rounded-full transition-all focus-ring"
+                  style={{ width: heroSlide === i ? 24 : 8, height: 8, background: heroSlide === i ? C.pine : C.line }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => setHeroSlide((s) => (s + 1) % heroSlides.length)}
+              className="p-2.5 rounded-full border focus-ring"
+              style={{ background: '#fff', borderColor: C.line }}
+              aria-label="Neste slide"
+            >
+              <ArrowRight size={18} color={C.ink} />
+            </button>
           </div>
-
-          {/* Next */}
-          <button
-            onClick={() => setHeroSlide((s) => (s + 1) % heroSlides.length)}
-            className="p-2.5 rounded-full focus-ring border"
-            style={{ background: '#fff', borderColor: C.line }}
-            aria-label="Neste slide"
-          >
-            <ArrowRight size={18} color={C.ink} />
-          </button>
         </div>
 
         {/* Trust badges */}
