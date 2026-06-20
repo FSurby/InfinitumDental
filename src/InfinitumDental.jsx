@@ -34,21 +34,22 @@ const SERVICE_ICON_MAP = {
   heart: Heart,
   calendar: Calendar,
   smile: Award,
+  layers: Layers,
 };
 
 const DEFAULT_SERVICES = [
-  { id: 's1', name: 'Tannundersøkelse', duration: '45 min', price: 890, iconKey: 'stethoscope',
-    desc: 'Grundig sjekk av tenner, tannkjøtt og bittfunksjon, med digital røntgen ved behov.' },
-  { id: 's2', name: 'Tannrens', duration: '45 min', price: 1190, iconKey: 'sparkles',
-    desc: 'Profesjonell rens og polering for et friskt og rent munnhulemiljø.' },
-  { id: 's3', name: 'Tannbleking', duration: '60 min', price: 2900, iconKey: 'sun',
-    desc: 'Skånsom, klinisk bleking for et synlig lysere smil.' },
-  { id: 's4', name: 'Fylling', duration: '30 min', price: 1450, iconKey: 'wrench',
-    desc: 'Tannfargede fyllinger som reparerer hull og skader skånsomt.' },
-  { id: 's5', name: 'Rotfylling', duration: '90 min', price: 4500, iconKey: 'activity',
-    desc: 'Behandling av infisert tannrot for å redde din egen tann.' },
-  { id: 's6', name: 'Implantatkonsultasjon', duration: '30 min', price: 0, iconKey: 'message',
-    desc: 'Uforpliktende samtale om implantatbehandling og kostnadsoverslag.' },
+  { id: 's1', name: 'Tannimplantat', duration: '60–90 min', price: 18000, iconKey: 'zap',
+    desc: 'Permanent erstatning for manglende tenner med titanskrue forankret i kjevebenet. Inkluderer konsultasjon, innsetting og krone.' },
+  { id: 's2', name: 'Implantatbro', duration: '2–3 sesjoner', price: 35000, iconKey: 'layers',
+    desc: 'Fast bro støttet av implantater – ideelt ved flere manglende tenner på rad. Gir full tyggefunksjon uten å slipe ned nabotennene.' },
+  { id: 's3', name: 'Oralkirurgi', duration: '30–60 min', price: 2500, iconKey: 'activity',
+    desc: 'Kirurgisk fjerning av tenner, visdomstenner og røtter. Utføres under lokalbedøvelse av erfarne spesialister.' },
+  { id: 's4', name: 'Periodontittbehandling', duration: '60 min', price: 3200, iconKey: 'heart',
+    desc: 'Behandling av tannkjøttbetennelse og periodontitt. Inkluderer grundig rens, rotplanering og oppfølgingsprotokoll.' },
+  { id: 's5', name: 'Tannprotese / Gebiss', duration: '3–5 besøk', price: 12000, iconKey: 'sparkles',
+    desc: 'Hel- og delprotese tilpasset din munn. Vi tilbyr også implantatforankrede proteser for optimal stabilitet.' },
+  { id: 's6', name: 'Spesialistkonsultasjon', duration: '45 min', price: 900, iconKey: 'stethoscope',
+    desc: 'Grundig klinisk undersøkelse, 3D-røntgen og individuell behandlingsplan. Første steg mot varig tannhelse.' },
 ];
 
 const PRODUCTS = [
@@ -175,12 +176,12 @@ const NAV_LINKS = [
 ];
 
 const TRANSLATIONS = {
-  heroEyebrow: { nb: 'Lørenskog · Familietannlege', en: 'Lørenskog · Family dentist' },
+  heroEyebrow: { nb: 'Lørenskog · Spesialistklinikk', en: 'Lørenskog · Specialist clinic' },
   heroTitle1: { nb: 'Tannhelse som varer', en: 'Dental health that lasts' },
   heroTitle2: { nb: 'livet ut.', en: 'a lifetime.' },
   heroLead: {
-    nb: 'Hos Infinitum Dental kombinerer vi moderne behandling med rolig oppfølging gjennom alle livets faser – fra første undersøkelse til livslang vedlikehold.',
-    en: 'At Infinitum Dental we combine modern treatment with calm, attentive care through every stage of life – from the first check-up to lifelong maintenance.',
+    nb: 'Infinitum Dental er en spesialistklinikk i Lørenskog med ekspertise innen tannimplantater, oralkirurgi og periodontittbehandling. Vi kombinerer avansert diagnostikk med individuelt tilpassede behandlingsplaner.',
+    en: 'Infinitum Dental is a specialist clinic in Lørenskog with expertise in dental implants, oral surgery and periodontitis treatment. We combine advanced diagnostics with individually tailored treatment plans.',
   },
   heroBook: { nb: 'Bestill time', en: 'Book appointment' },
   heroShop: { nb: 'Se nettbutikk', en: 'Visit shop' },
@@ -224,8 +225,8 @@ const TRANSLATIONS = {
   teamLabel: { nb: 'Om oss', en: 'About us' },
   teamTitle: { nb: 'Teamet bak Infinitum Dental', en: 'The team behind Infinitum Dental' },
   teamLead: {
-    nb: 'Et erfarent team som er her for å ta vare på smilet ditt, i alle livets faser.',
-    en: 'An experienced team here to take care of your smile, at every stage of life.',
+    nb: 'Et spesialisert team med høy faglig kompetanse innen implantologi, oralkirurgi og periodontologi.',
+    en: 'A specialist team with deep expertise in implantology, oral surgery and periodontology.',
   },
   newsLabel: { nb: 'Nyheter', en: 'News' },
   newsTitle: { nb: 'Siste fra klinikken', en: 'Latest from the clinic' },
@@ -457,14 +458,14 @@ function generateShareCard(product, price, discountPct, originalPrice) {
 }
 
 const DEFAULT_TEAM = [
-  { id: 't1', name: 'Dr. Maria Eriksen', role: 'Tannlege og daglig leder', iconKey: 'stethoscope', bookable: true,
-    bio: 'Har drevet klinikken siden 2015, med spesialfelt innen rotfylling og kosmetisk tannpleie.' },
-  { id: 't2', name: 'Dr. Amir Khalid', role: 'Tannlege', iconKey: 'stethoscope', bookable: true,
-    bio: 'Spesialiserer seg på implantatbehandling og kjeveortopedi.' },
-  { id: 't3', name: 'Lisa Haugen', role: 'Tannpleier', iconKey: 'sparkles', bookable: true,
-    bio: 'Ekspert på forebyggende tannpleie, tannrens og veiledning om munnhygiene.' },
-  { id: 't4', name: 'Nora Aas', role: 'Tannhelsesekretær', iconKey: 'heart', bookable: false,
-    bio: 'Tar hånd om resepsjon, timebestilling og pasientoppfølging.' },
+  { id: 't1', name: 'Dr. Maria Eriksen', role: 'Spesialist i oral kirurgi', iconKey: 'stethoscope', bookable: true,
+    bio: 'Spesialist i oral kirurgi med over 10 års erfaring innen tannimplantater og kjevekirurgi. Utdannet ved Universitetet i Oslo og spesialisert ved internasjonale sentre.' },
+  { id: 't2', name: 'Dr. Amir Khalid', role: 'Implantatspesialist', iconKey: 'stethoscope', bookable: true,
+    bio: 'Implantatspesialist med kompetanse i avanserte implantatsystemer, beinoppbygging og full-munn rehabilitering.' },
+  { id: 't3', name: 'Lisa Haugen', role: 'Spesialist i periodontologi', iconKey: 'sparkles', bookable: true,
+    bio: 'Spesialist i tannkjøttsykdommer (periodontologi). Behandler periodontitt, tannkjøttkirurgi og forebyggende periodontologi.' },
+  { id: 't4', name: 'Nora Aas', role: 'Klinikkkoordinator', iconKey: 'heart', bookable: false,
+    bio: 'Koordinerer behandlingsforløp, timebestillinger og pasientoppfølging. Første kontaktpunkt for nye pasienter.' },
 ];
 
 const DEFAULT_NEWS = [
@@ -555,7 +556,7 @@ const DEFAULT_SETTINGS = {
     sun: 'Stengt',
   },
   bannerEnabled: true,
-  bannerText: 'Fri frakt på alle bestillinger over 499 kr – sommerkampanje pågår nå!',
+  bannerText: 'Gratis spesialistkonsultasjon for nye pasienter denne måneden – bestill i dag!',
   freeShippingThreshold: 499,
   shippingCost: 59,
 };
@@ -590,11 +591,12 @@ const LEGAL_PAGES = {
 };
 
 const DEFAULT_FAQ = [
-  { id: 'faq1', question: 'Hvordan bestiller jeg time?', answer: 'Du kan bestille time direkte på nettsiden under "Bestill time", eller ta kontakt på telefon eller WhatsApp.' },
-  { id: 'faq2', question: 'Hva skjer hvis jeg ikke kan møte til avtalt time?', answer: 'Gi oss beskjed minst 24 timer i forveien dersom du må avbestille. Manglende oppmøte uten varsel kan medføre et gebyr.' },
-  { id: 'faq3', question: 'Tar dere imot nye pasienter?', answer: 'Ja, vi tar gjerne imot nye pasienter i alle aldre. Bestill en undersøkelsestime for å bli registrert hos oss.' },
-  { id: 'faq4', question: 'Kan jeg betale med Vipps eller kort i nettbutikken?', answer: 'Nettbutikken er foreløpig en demo. Betaling skjer ved henting i klinikken til en fullverdig betalingsløsning er på plass.' },
-  { id: 'faq5', question: 'Hvor lang er garantien på elektriske tannbørster?', answer: 'Alle elektriske tannbørster vi selger har minst 2 års produsentgaranti. Ta kontakt dersom noe skulle være feil.' },
+  { id: 'f1', question: 'Hva koster et tannimplantat?', answer: 'Et enkeltimplantat starter fra 18 000 kr inkl. krone. Prisen varierer etter antall implantater og behov for beinoppbygging. Vi gir alltid en skriftlig behandlingsplan med priser før oppstart.' },
+  { id: 'f2', question: 'Er tannimplantat smertefullt?', answer: 'Innsetting av implantat utføres under lokalbedøvelse og er normalt ikke smertefull under inngrepet. De fleste pasienter rapporterer mild ømhet i 2–3 dager etterpå, som håndteres med vanlige smertestillende.' },
+  { id: 'f3', question: 'Hvem kan få tannimplantater?', answer: 'De fleste voksne med god allmenntilstand kan få tannimplantater. Faktorer som røyking, ukontrollert diabetes og utilstrekkelig kjevevolum vurderes individuelt. Vi gjør alltid en grundig undersøkelse med 3D-røntgen før behandlingsstart.' },
+  { id: 'f4', question: 'Hva er periodontitt?', answer: 'Periodontitt er en bakteriebetennelse som angriper tannkjøttet og kjevebenet rundt tennene. Ubehandlet kan det føre til tannløsning. Vi tilbyr grundig behandling og oppfølgingsprogram.' },
+  { id: 'f5', question: 'Tar dere mot pasienter henvist fra andre tannleger?', answer: 'Ja, vi tar imot henvisninger fra tannleger for spesialistbehandling innen implantologi, oralkirurgi og periodontologi. Ta kontakt for samarbeidsavtale.' },
+  { id: 'f6', question: 'Hva er forskjellen på bro og implantat?', answer: 'En bro er festet på nabotennene og krever at disse slipes ned. Et implantat er selvstendig og bevarer nabotennene intakt. Implantater varer gjerne livet ut med riktig stell, og er som regel det beste valget på sikt.' },
 ];
 
 const DEFAULT_EMAIL_TEMPLATES = {
@@ -810,41 +812,41 @@ export default function App() {
   const DEFAULT_HERO_SLIDES = [
     {
       id: 'h1',
-      eyebrow: 'Lørenskog · Familietannlege',
-      title1: 'Tannhelse som varer',
-      title2: 'livet ut.',
-      lead: 'Hos Infinitum Dental kombinerer vi moderne behandling med rolig oppfølging gjennom alle livets faser – fra første undersøkelse til livslang vedlikehold.',
-      cta: { label: 'Bestill time', href: 'bestill' },
-      cta2: { label: 'Se nettbutikk', href: 'nettbutikk', style: 'coral' },
+      eyebrow: 'Spesialistklinikk · Lørenskog',
+      title1: 'Implantater og',
+      title2: 'spesialistbehandling.',
+      lead: 'Infinitum Dental er din spesialistklinikk for tannimplantater, oralkirurgi og avansert tannbehandling i Lørenskog. Vi tilbyr varige løsninger med høy faglig standard.',
+      cta: { label: 'Bestill konsultasjon', href: 'bestill' },
+      cta2: { label: 'Se behandlinger', href: 'tjenester', style: 'outline' },
       visual: 'cards',
     },
     {
       id: 'h2',
-      eyebrow: 'Nettbutikk',
-      title1: 'Produkter vi',
-      title2: 'anbefaler.',
-      lead: 'Vi selger kun produkter vi selv bruker og tror på i klinikken. Betal ved henting eller få levert hjem.',
-      cta: { label: 'Se alle produkter', href: 'nettbutikk' },
+      eyebrow: 'Tannimplantat',
+      title1: 'Permanent løsning –',
+      title2: 'som egne tenner.',
+      lead: 'Tannimplantater gir deg full tyggefunksjon og et naturlig utseende. Vi bruker dokumenterte implantatsystemer og følger deg gjennom hele behandlingsforløpet.',
+      cta: { label: 'Les om implantater', href: 'tjenester' },
       cta2: null,
-      visual: 'shop',
+      visual: 'cards',
     },
     {
       id: 'h3',
       eyebrow: 'Rask og enkel timebestilling',
-      title1: 'Klar for et',
-      title2: 'friskt smil?',
-      lead: 'Velg behandler, dato og tidspunkt – online, når det passer deg. Første undersøkelse fra 600 kr.',
+      title1: 'Klar for en',
+      title2: 'spesialistkonsultasjon?',
+      lead: 'Bestill time online – velg behandler, dato og tidspunkt. Vi tar oss tid til å lage en grundig behandlingsplan tilpasset deg.',
       cta: { label: 'Bestill time nå', href: 'bestill' },
-      cta2: { label: 'Se tjenester', href: 'tjenester', style: 'outline' },
+      cta2: { label: 'Se behandlinger', href: 'tjenester', style: 'outline' },
       visual: 'booking',
     },
   ];
   const heroSlides = heroSlidesList ?? DEFAULT_HERO_SLIDES;
 
   const DEFAULT_TRUST_BADGES = [
-    { id: 'tb1', iconKey: 'check', text: 'Godkjente spesialister' },
-    { id: 'tb2', iconKey: 'clock', text: 'Fleksible timeavtaler' },
-    { id: 'tb3', iconKey: 'cart', text: 'Produkter fra klinikken' },
+    { id: 'tb1', iconKey: 'award', text: 'Godkjente spesialister' },
+    { id: 'tb2', iconKey: 'zap', text: 'Implantateksperter' },
+    { id: 'tb3', iconKey: 'check', text: 'Moderne 3D-diagnostikk' },
     { id: 'tb4', iconKey: 'mappin', text: 'Lørenskog sentrum' },
   ];
   const BADGE_ICON_MAP = { check: Check, clock: Clock, cart: ShoppingCart, mappin: MapPin, star: Star, heart: Heart, sparkles: Sparkles, award: Award, zap: Zap };
@@ -6570,7 +6572,7 @@ export default function App() {
               <span className="display-font text-lg font-semibold" style={{ color: '#fff' }}>Infinitum Dental</span>
             </div>
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Din familietannlege i Lørenskog. Vi tar imot nye pasienter, fra de minste til de eldste i familien.
+              Spesialistklinikk i Lørenskog med ekspertise innen tannimplantater, oralkirurgi og periodontittbehandling.
             </p>
           </div>
           <div>
