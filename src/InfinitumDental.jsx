@@ -5269,7 +5269,7 @@ export default function App() {
           <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3">
             <a href="#hjem" onClick={(e) => { e.preventDefault(); scrollToId('hjem'); }} className="flex items-center gap-2.5 focus-ring rounded flex-shrink-0">
               <InfinityMark size={40} color={C.pine} />
-              <span className="display-font text-xl font-semibold" style={{ color: C.ink }}>
+              <span className="display-font text-2xl font-semibold" style={{ color: C.ink }}>
                 Infinitum <span style={{ color: C.pine }}>Dental</span>
               </span>
             </a>
