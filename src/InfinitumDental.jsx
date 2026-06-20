@@ -4087,6 +4087,193 @@ export default function App() {
               </div>
             </div>
           )}
+
+              {/* --- Hero slides --- */}
+              <div>
+                <SectionLabel>Hero-karusell</SectionLabel>
+                <h2 className="display-font text-2xl font-bold mb-6">Rediger slides</h2>
+                <div className="grid gap-6">
+                  {heroSlides.map((slide, idx) => (
+                    <div key={slide.id} className="rounded-2xl p-6 grid gap-4" style={{ background: C.card, border: `1px solid ${C.line}` }}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-sm" style={{ color: C.pine }}>Slide {idx + 1}</span>
+                        <button
+                          onClick={() => {
+                            const updated = heroSlides.filter((_, i) => i !== idx);
+                            setHeroSlidesList(updated);
+                            window.storage.set('hero-slides', JSON.stringify(updated), true).catch(() => {});
+                          }}
+                          className="text-xs px-3 py-1.5 rounded-full focus-ring"
+                          style={{ background: 'rgba(226,116,90,0.1)', color: C.coral }}
+                        >Slett</button>
+                      </div>
+                      {[
+                        ['eyebrow', 'Toppmerke (liten tekst over tittelen)'],
+                        ['title1', 'Tittel del 1 (svart)'],
+                        ['title2', 'Tittel del 2 (grønn)'],
+                        ['lead', 'Ingress / beskrivelse'],
+                      ].map(([field, label]) => (
+                        <div key={field}>
+                          <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>{label}</label>
+                          <input
+                            value={slide[field]}
+                            onChange={(e) => {
+                              const updated = heroSlides.map((s, i) => i === idx ? { ...s, [field]: e.target.value } : s);
+                              setHeroSlidesList(updated);
+                              window.storage.set('hero-slides', JSON.stringify(updated), true).catch(() => {});
+                            }}
+                            className="w-full rounded-lg px-3 py-2 text-sm focus-ring"
+                            style={{ border: `1px solid ${C.line}`, background: '#fff' }}
+                          />
+                        </div>
+                      ))}
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>CTA-knapp tekst</label>
+                          <input
+                            value={slide.cta.label}
+                            onChange={(e) => {
+                              const updated = heroSlides.map((s, i) => i === idx ? { ...s, cta: { ...s.cta, label: e.target.value } } : s);
+                              setHeroSlidesList(updated);
+                              window.storage.set('hero-slides', JSON.stringify(updated), true).catch(() => {});
+                            }}
+                            className="w-full rounded-lg px-3 py-2 text-sm focus-ring"
+                            style={{ border: `1px solid ${C.line}`, background: '#fff' }}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>Visuell stil</label>
+                          <select
+                            value={slide.visual}
+                            onChange={(e) => {
+                              const updated = heroSlides.map((s, i) => i === idx ? { ...s, visual: e.target.value } : s);
+                              setHeroSlidesList(updated);
+                              window.storage.set('hero-slides', JSON.stringify(updated), true).catch(() => {});
+                            }}
+                            className="w-full rounded-lg px-3 py-2 text-sm focus-ring"
+                            style={{ border: `1px solid ${C.line}`, background: '#fff' }}
+                          >
+                            <option value="cards">Tjenestekort</option>
+                            <option value="shop">Produkter</option>
+                            <option value="booking">Timebestilling</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const newSlide = {
+                        id: `h${Date.now()}`,
+                        eyebrow: 'Ny slide',
+                        title1: 'Tittel',
+                        title2: 'del to',
+                        lead: 'Beskriv innholdet her.',
+                        cta: { label: 'Les mer', href: 'tjenester' },
+                        cta2: null,
+                        visual: 'cards',
+                      };
+                      const updated = [...heroSlides, newSlide];
+                      setHeroSlidesList(updated);
+                      window.storage.set('hero-slides', JSON.stringify(updated), true).catch(() => {});
+                    }}
+                    className="text-sm font-bold px-5 py-2.5 rounded-full focus-ring"
+                    style={{ background: C.pine, color: '#fff' }}
+                  >+ Legg til slide</button>
+                </div>
+              </div>
+
+              {/* --- Tjenester --- */}
+              <div>
+                <SectionLabel>Tjenester</SectionLabel>
+                <h2 className="display-font text-2xl font-bold mb-6">Behandlinger og priser</h2>
+                <div className="grid gap-4">
+                  {services.map((svc, idx) => (
+                    <div key={svc.id} className="rounded-2xl p-5 grid gap-3" style={{ background: C.card, border: `1px solid ${C.line}` }}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-sm" style={{ color: C.pine }}>{svc.name}</span>
+                        <button
+                          onClick={() => {
+                            const updated = services.filter((_, i) => i !== idx);
+                            setServices(updated);
+                            window.storage.set('clinic-services', JSON.stringify(updated), true).catch(() => {});
+                          }}
+                          className="text-xs px-3 py-1.5 rounded-full focus-ring"
+                          style={{ background: 'rgba(226,116,90,0.1)', color: C.coral }}
+                        >Slett</button>
+                      </div>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>Navn</label>
+                          <input value={svc.name} onChange={(e) => { const u = services.map((s,i)=>i===idx?{...s,name:e.target.value}:s); setServices(u); window.storage.set('clinic-services',JSON.stringify(u),true).catch(()=>{}); }}
+                            className="w-full rounded-lg px-3 py-2 text-sm focus-ring" style={{ border:`1px solid ${C.line}`, background:'#fff' }} />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>Pris (kr)</label>
+                          <input type="number" value={svc.price} onChange={(e) => { const u = services.map((s,i)=>i===idx?{...s,price:Number(e.target.value)}:s); setServices(u); window.storage.set('clinic-services',JSON.stringify(u),true).catch(()=>{}); }}
+                            className="w-full rounded-lg px-3 py-2 text-sm focus-ring" style={{ border:`1px solid ${C.line}`, background:'#fff' }} />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>Varighet</label>
+                          <input value={svc.duration} onChange={(e) => { const u = services.map((s,i)=>i===idx?{...s,duration:e.target.value}:s); setServices(u); window.storage.set('clinic-services',JSON.stringify(u),true).catch(()=>{}); }}
+                            className="w-full rounded-lg px-3 py-2 text-sm focus-ring" style={{ border:`1px solid ${C.line}`, background:'#fff' }} />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>Ikon</label>
+                          <select value={svc.iconKey} onChange={(e) => { const u = services.map((s,i)=>i===idx?{...s,iconKey:e.target.value}:s); setServices(u); window.storage.set('clinic-services',JSON.stringify(u),true).catch(()=>{}); }}
+                            className="w-full rounded-lg px-3 py-2 text-sm focus-ring" style={{ border:`1px solid ${C.line}`, background:'#fff' }}>
+                            {Object.keys(SERVICE_ICON_MAP).map(k => <option key={k} value={k}>{k}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold mb-1" style={{ color: C.soft }}>Beskrivelse</label>
+                        <textarea value={svc.desc} rows={2} onChange={(e) => { const u = services.map((s,i)=>i===idx?{...s,desc:e.target.value}:s); setServices(u); window.storage.set('clinic-services',JSON.stringify(u),true).catch(()=>{}); }}
+                          className="w-full rounded-lg px-3 py-2 text-sm focus-ring resize-none" style={{ border:`1px solid ${C.line}`, background:'#fff' }} />
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const newSvc = { id:`svc${Date.now()}`, name:'Ny behandling', duration:'30 min', price:0, iconKey:'stethoscope', desc:'Beskriv behandlingen.' };
+                      const updated = [...services, newSvc];
+                      setServices(updated);
+                      window.storage.set('clinic-services', JSON.stringify(updated), true).catch(() => {});
+                    }}
+                    className="text-sm font-bold px-5 py-2.5 rounded-full focus-ring"
+                    style={{ background: C.pine, color: '#fff' }}
+                  >+ Legg til behandling</button>
+                </div>
+              </div>
+
+              {/* --- Trust badges --- */}
+              <div>
+                <SectionLabel>Trust-badges</SectionLabel>
+                <h2 className="display-font text-2xl font-bold mb-6">Grønn informasjonsrad</h2>
+                <div className="grid gap-3">
+                  {trustBadges.map((badge, idx) => (
+                    <div key={badge.id} className="rounded-2xl p-4 flex items-center gap-4" style={{ background: C.card, border: `1px solid ${C.line}` }}>
+                      <select value={badge.iconKey} onChange={(e) => { const u = trustBadges.map((b,i)=>i===idx?{...b,iconKey:e.target.value}:b); setTrustBadges(u); window.storage.set('trust-badges',JSON.stringify(u),true).catch(()=>{}); }}
+                        className="rounded-lg px-2 py-2 text-sm focus-ring" style={{ border:`1px solid ${C.line}`, background:'#fff' }}>
+                        {Object.keys(BADGE_ICON_MAP).map(k=><option key={k} value={k}>{k}</option>)}
+                      </select>
+                      <input value={badge.text} onChange={(e) => { const u = trustBadges.map((b,i)=>i===idx?{...b,text:e.target.value}:b); setTrustBadges(u); window.storage.set('trust-badges',JSON.stringify(u),true).catch(()=>{}); }}
+                        className="flex-1 rounded-lg px-3 py-2 text-sm focus-ring" style={{ border:`1px solid ${C.line}`, background:'#fff' }} />
+                      <button onClick={() => { const u = trustBadges.filter((_,i)=>i!==idx); setTrustBadges(u); window.storage.set('trust-badges',JSON.stringify(u),true).catch(()=>{}); }}
+                        className="text-xs px-3 py-1.5 rounded-full focus-ring" style={{ background:'rgba(226,116,90,0.1)', color:C.coral }}>Slett</button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const u = [...trustBadges, { id:`tb${Date.now()}`, iconKey:'check', text:'Ny badge' }];
+                      setTrustBadges(u);
+                      window.storage.set('trust-badges', JSON.stringify(u), true).catch(() => {});
+                    }}
+                    className="text-sm font-bold px-5 py-2.5 rounded-full focus-ring justify-self-start"
+                    style={{ background: C.pine, color: '#fff' }}
+                  >+ Legg til badge</button>
+                </div>
+              </div>
         </main>
       </div>
   );
