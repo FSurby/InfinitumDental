@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { authRegister, authLogin, authLogout, fetchProfile, updateProfile, onAuthStateChange } from './auth.js';
 import {
   Menu, X, ShoppingCart, Plus, Minus, Check, MapPin, Phone, Mail,
   Stethoscope, Sparkles, Sun, Wrench, Activity, MessageCircle,
@@ -1204,22 +1205,7 @@ export default function App() {
         if (mounted) setDiscountCodes(seed);
         window.storage.set('discount-codes', JSON.stringify(seed), true).catch(() => {});
       }
-      try {
-        const res = await window.storage.get('accounts', true);
-        if (mounted && res && res.value) {
-          setAccounts(JSON.parse(res.value));
-        }
-      } catch (err) {
-        // no accounts yet
-      }
-      try {
-        const res = await window.storage.get('session-user', false);
-        if (mounted && res && res.value) {
-          setCurrentUser(JSON.parse(res.value));
-        }
-      } catch (err) {
-        // no active session
-      }
+      // Auth state handled by onAuthStateChange listener below
       try {
         const res = await window.storage.get('featured-products', true);
         if (mounted && res && res.value) {
@@ -1234,7 +1220,16 @@ export default function App() {
         if (mounted) setProductsLoading(false);
       }
     })();
-    return () => { mounted = false; clearTimeout(safetyTimer); };
+    const { data: authListener } = onAuthStateChange(async (user) => {
+      if (!mounted) return;
+      if (user) {
+        const profile = await fetchProfile(user.id);
+        setCurrentUser({ id: user.id, email: user.email, name: profile?.name || user.email, phone: profile?.phone || '', address: profile?.address || '', accountType: profile?.account_type || 'private', companyName: profile?.company_name || '', orgNumber: profile?.org_number || '' });
+      } else {
+        setCurrentUser(null);
+      }
+    });
+    return () => { mounted = false; clearTimeout(safetyTimer); authListener?.subscription?.unsubscribe(); };
   }, []);
 
   const saveCustomProducts = async (next) => {
@@ -1248,7 +1243,7 @@ export default function App() {
 
   const allProducts = [...PRODUCTS, ...customProducts];
 
-  const ADMIN_PIN = '1234';
+  const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234';
 
   const handlePinSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -2076,19 +2071,7 @@ export default function App() {
     }
   };
 
-  // --- Demo accounts (NOT secure – for testing the member flow only) ---
-  const saveAccounts = async (next) => {
-    setAccounts(next);
-    try { await window.storage.set('accounts', JSON.stringify(next), true); } catch (err) { /* ignore */ }
-  };
-
-  const setSession = (user) => {
-    setCurrentUser(user);
-    if (user) window.storage.set('session-user', JSON.stringify(user), false).catch(() => {});
-    else window.storage.delete('session-user', false).catch(() => {});
-  };
-
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const name = authForm.name.trim();
     const email = authForm.email.trim().toLowerCase();
     const password = authForm.password;
@@ -2096,39 +2079,46 @@ export default function App() {
     if (!name || !email || !password) { setAuthError('Fyll inn navn, e-post og passord.'); return; }
     if (isBusiness && !authForm.companyName.trim()) { setAuthError('Fyll inn bedriftsnavn.'); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setAuthError('Skriv inn en gyldig e-postadresse.'); return; }
-    if (password.length < 4) { setAuthError('Passordet må være minst 4 tegn.'); return; }
-    if (accounts.some((a) => a.email === email)) { setAuthError('Det finnes allerede en bruker med denne e-posten.'); return; }
-    const user = { id: 'u' + Date.now(), name, email, password, phone: authForm.phone.trim(), address: authForm.address.trim(), accountType: authForm.accountType, companyName: authForm.companyName.trim(), orgNumber: authForm.orgNumber.trim() };
-    saveAccounts([...accounts, user]);
-    setSession(user);
-    setAuthOpen(false);
-    setAuthError('');
-    setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
-    showToast(`Velkommen, ${name.split(' ')[0]}!`);
+    if (password.length < 6) { setAuthError('Passordet må være minst 6 tegn.'); return; }
+    try {
+      await authRegister({ email, password, name, phone: authForm.phone.trim(), address: authForm.address.trim(), accountType: authForm.accountType, companyName: authForm.companyName.trim(), orgNumber: authForm.orgNumber.trim() });
+      setAuthOpen(false);
+      setAuthError('');
+      setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
+      showToast(`Velkommen, ${name.split(' ')[0]}! Sjekk e-posten din for bekreftelse.`);
+    } catch (err) {
+      setAuthError(err.message === 'User already registered' ? 'Det finnes allerede en konto med denne e-posten.' : (err.message || 'Noe gikk galt. Prøv igjen.'));
+    }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const email = authForm.email.trim().toLowerCase();
     const password = authForm.password;
-    const user = accounts.find((a) => a.email === email && a.password === password);
-    if (!user) { setAuthError('Feil e-post eller passord.'); return; }
-    setSession(user);
-    setAuthOpen(false);
-    setAuthError('');
-    setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
-    showToast(`Velkommen tilbake, ${user.name.split(' ')[0]}!`);
+    if (!email || !password) { setAuthError('Fyll inn e-post og passord.'); return; }
+    try {
+      const user = await authLogin({ email, password });
+      const profile = await fetchProfile(user.id);
+      setCurrentUser({ id: user.id, email: user.email, name: profile?.name || email, phone: profile?.phone || '', address: profile?.address || '', accountType: profile?.account_type || 'private', companyName: profile?.company_name || '', orgNumber: profile?.org_number || '' });
+      setAuthOpen(false);
+      setAuthError('');
+      setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
+      showToast(`Velkommen tilbake, ${(profile?.name || email).split(' ')[0]}!`);
+    } catch (err) {
+      setAuthError('Feil e-post eller passord.');
+    }
   };
 
-  const handleLogout = () => {
-    setSession(null);
+  const handleLogout = async () => {
+    await authLogout();
+    setCurrentUser(null);
     setAccountView(false);
     showToast('Du er logget ut');
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     const updated = { ...currentUser, name: profileDraft.name.trim(), phone: profileDraft.phone.trim(), address: profileDraft.address.trim() };
-    saveAccounts(accounts.map((a) => (a.id === currentUser.id ? updated : a)));
-    setSession(updated);
+    await updateProfile(currentUser.id, { name: updated.name, phone: updated.phone, address: updated.address });
+    setCurrentUser(updated);
     setProfileSaved(true);
     setTimeout(() => setProfileSaved(false), 2000);
   };
@@ -2222,7 +2212,7 @@ export default function App() {
                 </button>
               </div>
               <p className="text-xs mt-6" style={{ color: C.soft }}>
-                Demo-kode: 1234. I en virkelig løsning erstattes dette med ordentlig innlogging og brukerstyring.
+                Kun for klinikkens ansatte.
               </p>
             </div>
           ) : (
@@ -6807,7 +6797,7 @@ export default function App() {
                 </button>
               </div>
               <p className="text-xs mb-4" style={{ color: C.soft }}>
-                Demo-innlogging for testing – ikke bruk et ekte passord.
+                Passordet ditt er kryptert og lagret sikkert.
               </p>
               <div className="grid gap-3">
                 {authMode === 'register' && (
