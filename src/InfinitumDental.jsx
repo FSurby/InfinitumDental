@@ -38,28 +38,28 @@ const SERVICES = [
 ];
 
 const PRODUCTS = [
-  { id: 'p1', name: 'Jordan Clean Smile elektrisk tannbørste', price: 690, icon: Zap, tag: 'Bestselger',
+  { id: 'p1', sku: 'IDN-001', name: 'Jordan Clean Smile elektrisk tannbørste', price: 690, icon: Zap, tag: 'Bestselger',
     desc: 'Jordan Elektrisk tannbørste og refillbørster er utviklet i samarbeid med Wilfa. Serien passer med de fleste Oral-B tannbørster, kommer i miljøvennlig emballasje uten plast og har Jordan bust-teknologi. Refillhodene fås kjøpt i dagligvare og faghandel.',
     details: ['Langvarig batteri med rask lading', 'USB-lading', 'Indikator for lite batteri', 'Trykksensor', '2-minutters timer', '2 hastighetsmodus (8 000 / 10 000 omdr./min)', 'Praktisk reiseetui', 'Miljøvennlig emballasje uten plast'] },
-  { id: 'p2', name: 'Whitening tannkrem 75 ml', price: 89, icon: Sparkles,
+  { id: 'p2', sku: 'IDN-002', name: 'Whitening tannkrem 75 ml', price: 89, icon: Sparkles,
     desc: 'Mild, daglig tannkrem med finpolerende partikler som fjerner overflateflekker og bevarer emaljen. Med fluor for kariesbeskyttelse.',
     details: ['75 ml tube', 'Fluorinnhold 1450 ppm', 'Skånsom mot emalje', 'Mintsmak'] },
-  { id: 'p3', name: 'Tanntråd, 3-pakk', price: 59, icon: Wind,
+  { id: 'p3', sku: 'IDN-003', name: 'Tanntråd, 3-pakk', price: 59, icon: Wind,
     desc: 'Vokset tanntråd som glir lett mellom tennene uten å flises opp. Tre ruller i pakken – nok til flere måneders bruk.',
     details: ['3 x 50 m ruller', 'Vokset, flising-fri', 'Smal profil for trange mellomrom'] },
-  { id: 'p4', name: 'Fluorskyll 500 ml', price: 119, icon: Droplets,
+  { id: 'p4', sku: 'IDN-004', name: 'Fluorskyll 500 ml', price: 119, icon: Droplets,
     desc: 'Alkoholfri munnskyll med fluor som styrker emaljen og gir frisk ånde i opptil 12 timer. Brukes daglig etter tannpuss.',
     details: ['500 ml flaske', 'Alkoholfri', 'Fluor for emaljestyrking', 'Frisk ånde i opp til 12 timer'] },
-  { id: 'p5', name: 'Reisesett – børste, pasta, tråd', price: 249, icon: Briefcase,
+  { id: 'p5', sku: 'IDN-005', name: 'Reisesett – børste, pasta, tråd', price: 249, icon: Briefcase,
     desc: 'Kompakt sett med reisetannbørste, minitube tannkrem og tanntråd i et hardt etui. Perfekt i håndbagasjen eller på kontoret.',
     details: ['Reisetannbørste med beskyttelseshette', 'Tannkrem 20 ml', 'Tanntråd 10 m', 'Hardt reiseetui'] },
-  { id: 'p6', name: 'Tungeskrape i stål', price: 79, icon: Brush,
+  { id: 'p6', sku: 'IDN-006', name: 'Tungeskrape i stål', price: 79, icon: Brush,
     desc: 'Tungeskrape i rustfritt stål som fjerner belegg fra tungen og reduserer dårlig ånde. Tåler oppvaskmaskin.',
     details: ['Rustfritt stål', 'Ergonomisk gripekant', 'Tåler oppvaskmaskin', 'Levetid flere år'] },
-  { id: 'p7', name: 'Mellomromsbørster, 8-pk', price: 99, icon: Wind,
+  { id: 'p7', sku: 'IDN-007', name: 'Mellomromsbørster, 8-pk', price: 99, icon: Wind,
     desc: 'Mellomromsbørster i tre ulike størrelser for å rengjøre mellom tenner og rundt bruer/implantater. Fargekodet etter størrelse.',
     details: ['8 børster i 3 størrelser', 'Fargekodet for enkel sortering', 'Myk wire som ikke skader tannkjøtt'] },
-  { id: 'p8', name: 'Hjemmebleking-sett', price: 1490, icon: Sun, tag: 'Nyhet',
+  { id: 'p8', sku: 'IDN-008', name: 'Hjemmebleking-sett', price: 1490, icon: Sun, tag: 'Nyhet',
     desc: 'Profesjonelt hjemmebleking-sett med individuelt tilpassede skinner og bleking­gel anbefalt av klinikken. Synlig resultat etter 7–10 dager.',
     details: ['Individuelt tilpassede skinner', '4 sprøyter blekingsgel', 'Oppbevaringsetui', 'Synlig effekt etter 7–10 dager'] },
 ];
@@ -717,7 +717,7 @@ export default function App() {
   const [pinLockUntil, setPinLockUntil] = useState(null);
   const [customProducts, setCustomProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', tag: '', iconKey: 'package', desc: '', details: '', categoryIds: [], brandId: '', stock: '', orderStatus: '' });
+  const [newProduct, setNewProduct] = useState({ name: '', sku: '', price: '', tag: '', iconKey: 'package', desc: '', details: '', categoryIds: [], brandId: '', stock: '', orderStatus: '' });
   const [newProductImages, setNewProductImages] = useState([]);
   const [newProductImageUrl, setNewProductImageUrl] = useState('');
   const [newProductImageError, setNewProductImageError] = useState('');
@@ -1206,6 +1206,7 @@ export default function App() {
     }
     const product = {
       id: 'c' + Date.now(),
+      sku: newProduct.sku.trim() || undefined,
       name: newProduct.name.trim(),
       price,
       tag: newProduct.tag.trim() || undefined,
@@ -2170,6 +2171,17 @@ export default function App() {
                         className="w-full rounded-lg px-4 py-3 text-sm focus-ring"
                         style={{ border: `1px solid ${C.line}`, background: '#fff' }}
                         placeholder="129"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: C.soft }}>Varenummer (SKU)</label>
+                      <input
+                        type="text"
+                        value={newProduct.sku}
+                        onChange={(e) => setNewProduct((p) => ({ ...p, sku: e.target.value }))}
+                        className="w-full rounded-lg px-4 py-3 text-sm focus-ring"
+                        style={{ border: `1px solid ${C.line}`, background: '#fff' }}
+                        placeholder="F.eks. IDN-009"
                       />
                     </div>
                     <div>
@@ -4898,6 +4910,9 @@ export default function App() {
                   </span>
                 );
               })()}
+              {product.sku && (
+                <span className="text-xs font-mono mb-1 block" style={{ color: C.soft }}>Varenr. {product.sku}</span>
+              )}
               <div className="flex items-start justify-between gap-3 mb-3">
                 <h1 className="display-font text-3xl md:text-4xl font-bold">{product.name}</h1>
                 <div className="flex items-center gap-2 flex-shrink-0">
