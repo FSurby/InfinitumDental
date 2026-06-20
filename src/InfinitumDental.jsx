@@ -5409,7 +5409,7 @@ export default function App() {
                     {slide.title1} <span style={{ color: C.pine }}>{slide.title2}</span>
                   </h1>
                   <p className="text-base md:text-lg mb-8 max-w-md" style={{ color: C.soft }}>{slide.lead}</p>
-                  <div className="flex flex-wrap gap-4 mb-8">
+                  <div className="flex flex-wrap gap-4 mb-4">
                     <a
                       href={`#${slide.cta.href}`}
                       onClick={(e) => { e.preventDefault(); scrollToId(slide.cta.href); }}
@@ -5428,19 +5428,6 @@ export default function App() {
                           : { background: C.coral, color: '#fff' }}
                       >
                         {slide.cta2.label}
-                      </a>
-                    )}
-                  </div>
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" style={{ color: C.soft }}>
-                    <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
-                      <MapPin size={15} color={C.pine} /> Lørenskog sentrum
-                    </button>
-                    <button onClick={() => scrollToId('apningstider')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
-                      <Clock size={15} color={C.pine} /> {getWeekdaySummary(settings.hours)}
-                    </button>
-                    {settings.whatsapp && (
-                      <a href={whatsappLink(settings.whatsapp, 'Hei!')} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-semibold focus-ring rounded" style={{ color: C.pine }}>
-                        <WhatsAppIcon size={15} /> WhatsApp
                       </a>
                     )}
                   </div>
@@ -5511,8 +5498,23 @@ export default function App() {
 
         </div>
 
+        {/* Location links — outside slides, always fully visible and clickable */}
+        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm pb-2 px-6" style={{ color: C.soft }}>
+          <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+            <MapPin size={15} color={C.pine} /> Lørenskog sentrum
+          </button>
+          <button onClick={() => scrollToId('apningstider')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+            <Clock size={15} color={C.pine} /> {getWeekdaySummary(settings.hours)}
+          </button>
+          {settings.whatsapp && (
+            <a href={whatsappLink(settings.whatsapp, 'Hei!')} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-semibold focus-ring rounded" style={{ color: C.pine }}>
+              <WhatsAppIcon size={15} /> WhatsApp
+            </a>
+          )}
+        </div>
+
         {/* Carousel controls — normal flow, below slides, cannot be covered */}
-        <div className="flex items-center justify-center gap-4 py-5" style={{ background: C.bg }}>
+        <div className="flex items-center justify-center gap-4 py-4" style={{ background: C.bg }}>
           <button
             onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
             className="p-2.5 rounded-full border focus-ring"
