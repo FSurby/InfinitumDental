@@ -1243,7 +1243,8 @@ export default function App() {
 
   const allProducts = [...PRODUCTS, ...customProducts];
 
-  const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234';
+  const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || '';
+  const isAdmin = currentUser && ADMIN_EMAIL && currentUser.email === ADMIN_EMAIL;
 
   const handlePinSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -2182,38 +2183,24 @@ export default function App() {
         </header>
 
         <main className="max-w-4xl mx-auto px-6 py-12">
-          {!adminAuthed ? (
+          {!isAdmin ? (
             <div className="max-w-sm mx-auto rounded-2xl p-8 text-center" style={{ background: C.card, border: `1px solid ${C.line}` }}>
               <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(47,107,94,0.1)' }}>
                 <Lock size={22} color={C.pine} />
               </div>
-              <h1 className="display-font text-2xl font-bold mb-2">Adminpålogging</h1>
-              <p className="text-sm mb-6" style={{ color: C.soft }}>Skriv inn adminkoden for å administrere produkter i nettbutikken.</p>
-              <div className="grid gap-3">
-                <input
-                  type="password"
-                  value={pinInput}
-                  onChange={(e) => setPinInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handlePinSubmit(e); }}
-                  placeholder="Kode"
-                  disabled={!!pinLockUntil}
-                  className="w-full rounded-lg px-4 py-3 text-sm text-center focus-ring disabled:opacity-50"
-                  style={{ border: `1px solid ${C.line}`, background: '#fff' }}
-                />
-                {pinError && <p className="text-sm" style={{ color: C.coral }}>{pinError}</p>}
+              <h1 className="display-font text-2xl font-bold mb-2">Admin</h1>
+              <p className="text-sm mb-6" style={{ color: C.soft }}>
+                {currentUser ? 'Din konto har ikke admintilgang.' : 'Logg inn med admin-kontoen for å få tilgang.'}
+              </p>
+              {!currentUser && (
                 <button
-                  type="button"
-                  onClick={handlePinSubmit}
-                  disabled={!!pinLockUntil}
-                  className="font-bold py-3 rounded-full focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => { setView('site'); openAuth('login'); }}
+                  className="font-bold py-3 px-8 rounded-full focus-ring"
                   style={{ background: C.pine, color: '#fff' }}
                 >
                   Logg inn
                 </button>
-              </div>
-              <p className="text-xs mt-6" style={{ color: C.soft }}>
-                Kun for klinikkens ansatte.
-              </p>
+              )}
             </div>
           ) : (
             <div className="grid gap-10">
