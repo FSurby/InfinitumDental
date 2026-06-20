@@ -5402,14 +5402,14 @@ export default function App() {
 
       {/* Hero */}
       {/* Hero carousel */}
-      <section id="hjem" className="relative overflow-hidden" style={{ background: C.bg }}>
-        {/* Slides */}
-        <div className="relative" style={{ minHeight: 420 }}>
+      <section id="hjem" style={{ background: C.bg }}>
+        {/* Slides — fixed height container so nothing overflows onto controls */}
+        <div className="relative overflow-hidden" style={{ height: 480 }}>
           {heroSlides.map((slide, i) => (
             <div
               key={i}
               className="absolute inset-0 transition-opacity duration-700"
-              style={{ opacity: heroSlide === i ? 1 : 0, pointerEvents: heroSlide === i ? 'auto' : 'none' }}
+              style={{ opacity: heroSlide === i ? 1 : 0, pointerEvents: heroSlide === i ? 'auto' : 'none', overflowY: 'hidden' }}
             >
               <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-10 items-center">
                 {/* Left: text */}
@@ -5519,41 +5519,37 @@ export default function App() {
             </div>
           ))}
 
-          {/* Spacer to set height */}
-          <div className="invisible max-w-6xl mx-auto px-6 py-12 md:py-20">
-            <div className="h-64 md:h-80" />
-          </div>
+        </div>
 
-          {/* Carousel controls — absolute so they're always on top and clickable */}
-          <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-4 z-10">
-            <button
-              onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
-              className="p-2.5 rounded-full border focus-ring"
-              style={{ background: '#fff', borderColor: C.line }}
-              aria-label="Forrige slide"
-            >
-              <ArrowLeft size={18} color={C.ink} />
-            </button>
-            <div className="flex items-center gap-2">
-              {heroSlides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setHeroSlide(i)}
-                  aria-label={`Slide ${i + 1}`}
-                  className="rounded-full transition-all focus-ring"
-                  style={{ width: heroSlide === i ? 24 : 8, height: 8, background: heroSlide === i ? C.pine : C.line }}
-                />
-              ))}
-            </div>
-            <button
-              onClick={() => setHeroSlide((s) => (s + 1) % heroSlides.length)}
-              className="p-2.5 rounded-full border focus-ring"
-              style={{ background: '#fff', borderColor: C.line }}
-              aria-label="Neste slide"
-            >
-              <ArrowRight size={18} color={C.ink} />
-            </button>
+        {/* Carousel controls — normal flow, below slides, cannot be covered */}
+        <div className="flex items-center justify-center gap-4 py-5" style={{ background: C.bg }}>
+          <button
+            onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
+            className="p-2.5 rounded-full border focus-ring"
+            style={{ background: '#fff', borderColor: C.line }}
+            aria-label="Forrige slide"
+          >
+            <ArrowLeft size={18} color={C.ink} />
+          </button>
+          <div className="flex items-center gap-2">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setHeroSlide(i)}
+                aria-label={`Slide ${i + 1}`}
+                className="rounded-full transition-all focus-ring"
+                style={{ width: heroSlide === i ? 24 : 8, height: 8, background: heroSlide === i ? C.pine : C.line }}
+              />
+            ))}
           </div>
+          <button
+            onClick={() => setHeroSlide((s) => (s + 1) % heroSlides.length)}
+            className="p-2.5 rounded-full border focus-ring"
+            style={{ background: '#fff', borderColor: C.line }}
+            aria-label="Neste slide"
+          >
+            <ArrowRight size={18} color={C.ink} />
+          </button>
         </div>
 
         {/* Trust badges */}
