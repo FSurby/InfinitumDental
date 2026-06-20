@@ -5398,6 +5398,7 @@ export default function App() {
                 pointerEvents: heroSlide === i ? 'auto' : 'none',
                 position: heroSlide === i ? 'relative' : 'absolute',
                 top: 0, left: 0, right: 0,
+                zIndex: heroSlide === i ? 1 : 0,
               }}
             >
               <div className="max-w-6xl mx-auto px-6 py-8 md:py-14 grid md:grid-cols-2 gap-10 items-center">
