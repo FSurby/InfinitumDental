@@ -5503,14 +5503,14 @@ export default function App() {
                 pointerEvents: heroSlide === i ? 'auto' : 'none',
               }}
             >
-              <div className="max-w-6xl mx-auto px-6 py-8 md:py-14 grid md:grid-cols-2 gap-10 items-center">
+              <div className="max-w-6xl mx-auto px-6 py-4 md:py-14 grid md:grid-cols-2 gap-6 md:gap-10 items-center">
                 {/* Left: text */}
                 <div>
                   <SectionLabel>{slide.eyebrow}</SectionLabel>
-                  <h1 className="display-font text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: C.ink, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+                  <h1 className="display-font text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-3 md:mb-6" style={{ color: C.ink, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
                     {slide.title1} <span style={{ color: C.pine }}>{slide.title2}</span>
                   </h1>
-                  <p className="text-base md:text-lg mb-8 max-w-md" style={{ color: C.soft }}>{slide.lead}</p>
+                  <p className="text-base md:text-lg mb-4 md:mb-8 max-w-md" style={{ color: C.soft }}>{slide.lead}</p>
                   <div className="flex flex-wrap gap-4 mb-4">
                     <a
                       href={`#${slide.cta.href}`}
@@ -5601,7 +5601,7 @@ export default function App() {
         </div>
 
         {/* Location links — outside slides, always fully visible and clickable */}
-        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm pb-2 px-6" style={{ color: C.soft }}>
+        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-1 text-sm pb-1 px-6" style={{ color: C.soft }}>
           <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
             <MapPin size={15} color={C.pine} /> Lørenskog sentrum
           </button>
@@ -5616,7 +5616,7 @@ export default function App() {
         </div>
 
         {/* Carousel controls — normal flow, below slides, cannot be covered */}
-        <div className="flex items-center justify-center gap-4 py-4" style={{ background: C.bg }}>
+        <div className="flex items-center justify-center gap-4 py-2" style={{ background: C.bg }}>
           <button
             onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
             className="p-2.5 rounded-full border focus-ring"
