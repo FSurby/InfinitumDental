@@ -699,19 +699,6 @@ function SectionLabel({ children }) {
   );
 }
 
-function Stars({ value, size = 14, showValue = false }) {
-  const rounded = Math.round(value);
-  return (
-    <span className="inline-flex items-center gap-1">
-      <span className="inline-flex">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <Star key={i} size={size} color={C.gold} fill={i <= rounded ? C.gold : 'none'} strokeWidth={1.5} />
-        ))}
-      </span>
-      {showValue && <span className="text-xs font-semibold" style={{ color: C.soft }}>{value.toFixed(1)}</span>}
-    </span>
-  );
-}
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -838,8 +825,7 @@ export default function App() {
   const [galleryIndex, setGalleryIndex] = useState(0);
 
   const [favorites, setFavorites] = useState([]);
-  const [reviews, setReviews] = useState({});
-  const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, text: '' });
+
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [showFavorites, setShowFavorites] = useState(false);
   const [toast, setToast] = useState(null);
@@ -1130,14 +1116,7 @@ export default function App() {
       } catch (err) {
         // no favorites saved yet
       }
-      try {
-        const res = await window.storage.get('product-reviews', true);
-        if (mounted && res && res.value) {
-          setReviews(JSON.parse(res.value));
-        }
-      } catch (err) {
-        // no reviews saved yet
-      }
+
       try {
         const res = await window.storage.get('discount-codes', true);
         if (mounted && res && res.value) {
@@ -1965,27 +1944,6 @@ export default function App() {
     window.storage.set('favorites', JSON.stringify(next), false).catch(() => {});
   };
 
-  // --- Reviews ---
-  const getAvgRating = (productId) => {
-    const list = reviews[productId] || [];
-    if (list.length === 0) return null;
-    return list.reduce((s, r) => s + r.rating, 0) / list.length;
-  };
-
-  const handleAddReview = (productId) => {
-    if (!reviewForm.name.trim() || !reviewForm.text.trim()) return;
-    const entry = {
-      id: 'rev' + Date.now(),
-      name: reviewForm.name.trim(),
-      rating: reviewForm.rating,
-      text: reviewForm.text.trim(),
-      date: new Date().toISOString(),
-    };
-    const next = { ...reviews, [productId]: [...(reviews[productId] || []), entry] };
-    setReviews(next);
-    window.storage.set('product-reviews', JSON.stringify(next), true).catch(() => {});
-    setReviewForm({ name: '', rating: 5, text: '' });
-  };
 
   // --- Recently viewed (session only) ---
   const trackRecentlyViewed = (productId) => {
@@ -4963,12 +4921,6 @@ export default function App() {
                 </div>
               </div>
 
-              {getAvgRating(product.id) !== null && (
-                <div className="flex items-center gap-2 mb-3">
-                  <Stars value={getAvgRating(product.id)} size={16} showValue />
-                  <span className="text-sm" style={{ color: C.soft }}>({(reviews[product.id] || []).length} omtaler)</span>
-                </div>
-              )}
 
               <div className="flex items-center gap-3 mb-5 flex-wrap">
                 {discountPct ? (
@@ -5155,75 +5107,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Reviews */}
-          <div className="mt-14 pt-10" style={{ borderTop: `1px solid ${C.line}` }}>
-            <h2 className="display-font text-2xl font-bold mb-1">Omtaler</h2>
-            {getAvgRating(product.id) !== null ? (
-              <div className="flex items-center gap-2 mb-6">
-                <Stars value={getAvgRating(product.id)} size={16} showValue />
-                <span className="text-sm" style={{ color: C.soft }}>basert på {(reviews[product.id] || []).length} omtaler</span>
-              </div>
-            ) : (
-              <p className="text-sm mb-6" style={{ color: C.soft }}>Ingen omtaler ennå – bli den første til å gi en vurdering.</p>
-            )}
-
-            <div className="grid gap-4 mb-8">
-              {(reviews[product.id] || []).slice().reverse().map((r) => (
-                <div key={r.id} className="rounded-xl p-4" style={{ background: C.card, border: `1px solid ${C.line}` }}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-bold">{r.name}</span>
-                    <Stars value={r.rating} size={13} />
-                  </div>
-                  <p className="text-xs mb-2" style={{ color: C.soft }}>{new Date(r.date).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                  <p className="text-sm" style={{ color: C.ink }}>{r.text}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="rounded-xl p-5 max-w-lg" style={{ background: C.card, border: `1px solid ${C.line}` }}>
-              <h3 className="text-sm font-bold uppercase tracking-wide mb-3" style={{ color: C.soft }}>Skriv en omtale</h3>
-              <div className="grid gap-3">
-                <input
-                  type="text"
-                  value={reviewForm.name}
-                  onChange={(e) => setReviewForm((f) => ({ ...f, name: e.target.value }))}
-                  placeholder="Navnet ditt"
-                  className="rounded-lg px-3 py-2 text-sm focus-ring"
-                  style={{ border: `1px solid ${C.line}`, background: '#fff' }}
-                />
-                <div className="flex items-center gap-2">
-                  <span className="text-sm" style={{ color: C.soft }}>Vurdering:</span>
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setReviewForm((f) => ({ ...f, rating: i }))}
-                      aria-label={`${i} stjerner`}
-                      className="focus-ring rounded"
-                    >
-                      <Star size={22} color={C.gold} fill={i <= reviewForm.rating ? C.gold : 'none'} />
-                    </button>
-                  ))}
-                </div>
-                <textarea
-                  value={reviewForm.text}
-                  onChange={(e) => setReviewForm((f) => ({ ...f, text: e.target.value }))}
-                  rows={3}
-                  placeholder="Hva synes du om produktet?"
-                  className="rounded-lg px-3 py-2 text-sm focus-ring"
-                  style={{ border: `1px solid ${C.line}`, background: '#fff' }}
-                />
-                <button
-                  onClick={() => handleAddReview(product.id)}
-                  disabled={!reviewForm.name.trim() || !reviewForm.text.trim()}
-                  className="font-bold px-5 py-2.5 rounded-full focus-ring justify-self-start disabled:opacity-40 disabled:cursor-not-allowed"
-                  style={{ background: C.pine, color: '#fff' }}
-                >
-                  Publiser omtale
-                </button>
-              </div>
-            </div>
-          </div>
 
           {relatedProducts.length > 0 && (
             <div className="mt-14">
@@ -5839,12 +5722,7 @@ export default function App() {
                     </span>
                   )}
                   <h3 className="text-base font-bold leading-snug">{p.name}</h3>
-                  {getAvgRating(p.id) !== null && (
-                    <span className="flex items-center gap-1.5">
-                      <Stars value={getAvgRating(p.id)} size={13} />
-                      <span className="text-xs" style={{ color: C.soft }}>({(reviews[p.id] || []).length})</span>
-                    </span>
-                  )}
+
                   {p.desc && (
                     <p className="text-sm leading-snug flex-1" style={{ color: C.soft, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {p.desc}
