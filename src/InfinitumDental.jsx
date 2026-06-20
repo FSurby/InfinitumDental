@@ -908,7 +908,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
-  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '', phone: '', address: '' });
+  const [authForm, setAuthForm] = useState({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
   const [authError, setAuthError] = useState('');
   const [accountView, setAccountView] = useState(false);
   const [profileDraft, setProfileDraft] = useState({ name: '', phone: '', address: '' });
@@ -2092,16 +2092,18 @@ export default function App() {
     const name = authForm.name.trim();
     const email = authForm.email.trim().toLowerCase();
     const password = authForm.password;
+    const isBusiness = authForm.accountType === 'business';
     if (!name || !email || !password) { setAuthError('Fyll inn navn, e-post og passord.'); return; }
+    if (isBusiness && !authForm.companyName.trim()) { setAuthError('Fyll inn bedriftsnavn.'); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setAuthError('Skriv inn en gyldig e-postadresse.'); return; }
     if (password.length < 4) { setAuthError('Passordet må være minst 4 tegn.'); return; }
     if (accounts.some((a) => a.email === email)) { setAuthError('Det finnes allerede en bruker med denne e-posten.'); return; }
-    const user = { id: 'u' + Date.now(), name, email, password, phone: authForm.phone.trim(), address: authForm.address.trim() };
+    const user = { id: 'u' + Date.now(), name, email, password, phone: authForm.phone.trim(), address: authForm.address.trim(), accountType: authForm.accountType, companyName: authForm.companyName.trim(), orgNumber: authForm.orgNumber.trim() };
     saveAccounts([...accounts, user]);
     setSession(user);
     setAuthOpen(false);
     setAuthError('');
-    setAuthForm({ name: '', email: '', password: '', phone: '', address: '' });
+    setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
     showToast(`Velkommen, ${name.split(' ')[0]}!`);
   };
 
@@ -6811,7 +6813,27 @@ export default function App() {
               </p>
               <div className="grid gap-3">
                 {authMode === 'register' && (
-                  <input type="text" value={authForm.name} onChange={(e) => setAuthForm((f) => ({ ...f, name: e.target.value }))} placeholder="Navn" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                  <>
+                    {/* Account type toggle */}
+                    <div className="flex rounded-lg overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
+                      {[{ value: 'private', label: 'Privatperson' }, { value: 'business', label: 'Bedrift' }].map(({ value, label }) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setAuthForm((f) => ({ ...f, accountType: value }))}
+                          className="flex-1 py-2 text-sm font-semibold transition-colors focus-ring"
+                          style={{ background: authForm.accountType === value ? C.pine : '#fff', color: authForm.accountType === value ? '#fff' : C.soft }}
+                        >{label}</button>
+                      ))}
+                    </div>
+                    <input type="text" value={authForm.name} onChange={(e) => setAuthForm((f) => ({ ...f, name: e.target.value }))} placeholder={authForm.accountType === 'business' ? 'Kontaktperson' : 'Navn'} className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                    {authForm.accountType === 'business' && (
+                      <>
+                        <input type="text" value={authForm.companyName} onChange={(e) => setAuthForm((f) => ({ ...f, companyName: e.target.value }))} placeholder="Bedriftsnavn" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                        <input type="text" value={authForm.orgNumber} onChange={(e) => setAuthForm((f) => ({ ...f, orgNumber: e.target.value }))} placeholder="Org.nummer (valgfritt)" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                      </>
+                    )}
+                  </>
                 )}
                 <input type="email" value={authForm.email} onChange={(e) => setAuthForm((f) => ({ ...f, email: e.target.value }))} placeholder="E-post" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
                 <input type="password" value={authForm.password} onChange={(e) => setAuthForm((f) => ({ ...f, password: e.target.value }))} placeholder="Passord" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
