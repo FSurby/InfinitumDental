@@ -5500,6 +5500,7 @@ export default function App() {
               style={{
                 gridArea: '1 / 1',
                 opacity: heroSlide === i ? 1 : 0,
+                visibility: heroSlide === i ? 'visible' : 'hidden',
                 pointerEvents: heroSlide === i ? 'auto' : 'none',
               }}
             >
@@ -5600,50 +5601,50 @@ export default function App() {
 
         </div>
 
-        {/* Location links — outside slides, always fully visible and clickable */}
-        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-1 text-sm pb-1 px-6" style={{ color: C.soft }}>
-          <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
-            <MapPin size={15} color={C.pine} /> Lørenskog sentrum
-          </button>
-          <button onClick={() => scrollToId('apningstider')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
-            <Clock size={15} color={C.pine} /> {getWeekdaySummary(settings.hours)}
-          </button>
-          {settings.whatsapp && (
-            <a href={whatsappLink(settings.whatsapp, 'Hei!')} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-semibold focus-ring rounded" style={{ color: C.pine }}>
-              <WhatsAppIcon size={15} /> WhatsApp
-            </a>
-          )}
-        </div>
-
-        {/* Carousel controls — normal flow, below slides, cannot be covered */}
-        <div className="flex items-center justify-center gap-4 py-2" style={{ background: C.bg }}>
-          <button
-            onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
-            className="p-2.5 rounded-full border focus-ring"
-            style={{ background: '#fff', borderColor: C.line }}
-            aria-label="Forrige slide"
-          >
-            <ArrowLeft size={18} color={C.ink} />
-          </button>
-          <div className="flex items-center gap-2">
-            {heroSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setHeroSlide(i)}
-                aria-label={`Slide ${i + 1}`}
-                className="rounded-full transition-all focus-ring"
-                style={{ width: heroSlide === i ? 24 : 8, height: 8, background: heroSlide === i ? C.pine : C.line }}
-              />
-            ))}
+        {/* Location links + carousel controls — always visible below slides */}
+        <div className="flex flex-col items-center gap-2 py-3 px-6" style={{ background: C.bg }}>
+          <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-1 text-sm" style={{ color: C.soft }}>
+            <button onClick={() => scrollToId('kontakt')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+              <MapPin size={15} color={C.pine} /> Lørenskog sentrum
+            </button>
+            <button onClick={() => scrollToId('apningstider')} className="flex items-center gap-1.5 focus-ring rounded hover:underline" style={{ color: C.soft }}>
+              <Clock size={15} color={C.pine} /> {getWeekdaySummary(settings.hours)}
+            </button>
+            {settings.whatsapp && (
+              <a href={whatsappLink(settings.whatsapp, 'Hei!')} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-semibold focus-ring rounded" style={{ color: C.pine }}>
+                <WhatsAppIcon size={15} /> WhatsApp
+              </a>
+            )}
           </div>
-          <button
-            onClick={() => setHeroSlide((s) => (s + 1) % heroSlides.length)}
-            className="p-2.5 rounded-full border focus-ring"
-            style={{ background: '#fff', borderColor: C.line }}
-            aria-label="Neste slide"
-          >
-            <ArrowRight size={18} color={C.ink} />
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setHeroSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)}
+              className="p-2.5 rounded-full border focus-ring"
+              style={{ background: '#fff', borderColor: C.line }}
+              aria-label="Forrige slide"
+            >
+              <ArrowLeft size={18} color={C.ink} />
+            </button>
+            <div className="flex items-center gap-2">
+              {heroSlides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setHeroSlide(i)}
+                  aria-label={`Slide ${i + 1}`}
+                  className="rounded-full transition-all focus-ring"
+                  style={{ width: heroSlide === i ? 24 : 8, height: 8, background: heroSlide === i ? C.pine : C.line }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => setHeroSlide((s) => (s + 1) % heroSlides.length)}
+              className="p-2.5 rounded-full border focus-ring"
+              style={{ background: '#fff', borderColor: C.line }}
+              aria-label="Neste slide"
+            >
+              <ArrowRight size={18} color={C.ink} />
+            </button>
+          </div>
         </div>
 
         {/* Trust badges */}
