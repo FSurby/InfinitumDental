@@ -6187,7 +6187,7 @@ export default function App() {
                     style={{ border: `1px solid ${C.line}`, background: '#fff' }}
                   >
                     {services.map((s) => (
-                      <option key={s.id} value={s.id}>{s.name} – {s.duration} – {formatPrice(s.price)}</option>
+                      <option key={s.id} value={s.id}>{s.name} – {s.duration} – fra {formatPrice(s.price)}</option>
                     ))}
                   </select>
                 </div>
