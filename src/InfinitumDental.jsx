@@ -813,8 +813,8 @@ export default function App() {
     {
       id: 'h1',
       eyebrow: 'Spesialistklinikk · Lørenskog',
-      title1: 'Implantater og',
-      title2: 'spesialistbehandling.',
+      title1: 'Din klinikk for',
+      title2: 'implantater.',
       lead: 'Infinitum Dental er din spesialistklinikk for tannimplantater, oralkirurgi og avansert tannbehandling i Lørenskog. Vi tilbyr varige løsninger med høy faglig standard.',
       cta: { label: 'Bestill konsultasjon', href: 'bestill' },
       cta2: { label: 'Se behandlinger', href: 'tjenester', style: 'outline' },
@@ -5508,7 +5508,7 @@ export default function App() {
                 {/* Left: text */}
                 <div>
                   <SectionLabel>{slide.eyebrow}</SectionLabel>
-                  <h1 className="display-font text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-3 md:mb-6" style={{ color: C.ink, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+                  <h1 className="display-font text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-3 md:mb-6" style={{ color: C.ink, overflowWrap: 'break-word' }}>
                     {slide.title1} <span style={{ color: C.pine }}>{slide.title2}</span>
                   </h1>
                   <p className="text-base md:text-lg mb-4 md:mb-8 max-w-md" style={{ color: C.soft }}>{slide.lead}</p>
