@@ -833,8 +833,8 @@ export default function App() {
     {
       id: 'h3',
       eyebrow: 'Rask og enkel timebestilling',
-      title1: 'Klar for en',
-      title2: 'spesialistkonsultasjon?',
+      title1: 'Trenger du en',
+      title2: 'spesialist?',
       lead: 'Bestill time online – velg behandler, dato og tidspunkt. Vi tar oss tid til å lage en grundig behandlingsplan tilpasset deg.',
       cta: { label: 'Bestill time nå', href: 'bestill' },
       cta2: { label: 'Se behandlinger', href: 'tjenester', style: 'outline' },
