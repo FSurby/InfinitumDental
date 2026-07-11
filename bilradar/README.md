@@ -89,12 +89,27 @@ npm run dev
 - Per-side `metadata` + OpenGraph, `sitemap.xml`, `robots.txt`.
 - Strukturerte data (JSON-LD): `Product`/`Offer` på tilbud, `Article` på blogg.
 
-## Deploy på Vercel
+## Deploy på Vercel (nytt prosjekt)
 
-1. Push repoet til GitHub.
-2. Importer i Vercel, sett **Root Directory** til `bilradar`.
-3. Legg inn samme miljøvariabler som i `.env.local`.
-4. Deploy.
+Bilradar ligger i undermappen `bilradar/`, så det nye Vercel-prosjektet må ha
+**Root Directory** satt til `bilradar`.
+
+### Ett-klikks deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FFSurby%2FInfinitumDental&root-directory=bilradar&project-name=bilradar&repository-name=bilradar&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SITE_URL,ADMIN_EMAILS&envDescription=Valgfritt%20%E2%80%93%20uten%20disse%20kj%C3%B8rer%20siden%20p%C3%A5%20eksempeldata&envLink=https%3A%2F%2Fgithub.com%2FFSurby%2FInfinitumDental%2Fblob%2Fmain%2Fbilradar%2F.env.example)
+
+Knappen forhåndsutfyller rot-mappen `bilradar` og spør etter miljøvariablene.
+Miljøvariablene er **valgfrie** – hopper du over dem, deployes siden på
+eksempeldata.
+
+### Manuelt
+
+1. [vercel.com/new](https://vercel.com/new) → importer `FSurby/InfinitumDental`.
+2. Sett **Root Directory** = `bilradar` (viktig – ellers bygges det gamle
+   prosjektet i repo-roten).
+3. (Valgfritt) Legg inn miljøvariablene fra `.env.example` under **Environment
+   Variables**.
+4. **Deploy** → du får en `bilradar-*.vercel.app`-adresse.
 
 ## Prosjektstruktur
 
