@@ -1,6 +1,6 @@
 import { supabase } from './storage.js'
 
-export async function authRegister({ email, password, name, phone, address, accountType, companyName, orgNumber }) {
+export async function authRegister({ email, password, name, phone, accountType, companyName, orgNumber, invoiceEmail }) {
   if (!supabase) throw new Error('Supabase ikke konfigurert')
   const { data, error } = await supabase.auth.signUp({ email, password })
   if (error) throw error
@@ -10,10 +10,10 @@ export async function authRegister({ email, password, name, phone, address, acco
       id: userId,
       name: name || '',
       phone: phone || '',
-      address: address || '',
       account_type: accountType || 'private',
       company_name: companyName || '',
       org_number: orgNumber || '',
+      invoice_email: invoiceEmail || '',
     })
   }
   return data.user

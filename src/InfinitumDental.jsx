@@ -2079,12 +2079,14 @@ export default function App() {
     const email = authForm.email.trim().toLowerCase();
     const password = authForm.password;
     const isBusiness = authForm.accountType === 'business';
+    const phone = authForm.phone.trim();
     if (!name || !email || !password) { setAuthError('Fyll inn navn, e-post og passord.'); return; }
+    if (!phone) { setAuthError('Telefonnummer er påkrevd.'); return; }
     if (isBusiness && !authForm.companyName.trim()) { setAuthError('Fyll inn bedriftsnavn.'); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setAuthError('Skriv inn en gyldig e-postadresse.'); return; }
-    if (password.length < 6) { setAuthError('Passordet må være minst 6 tegn.'); return; }
+    if (password.length < 8) { setAuthError('Passordet må være minst 8 tegn.'); return; }
     try {
-      await authRegister({ email, password, name, phone: authForm.phone.trim(), address: authForm.address.trim(), accountType: authForm.accountType, companyName: authForm.companyName.trim(), orgNumber: authForm.orgNumber.trim() });
+      await authRegister({ email, password, name, phone, accountType: authForm.accountType, companyName: authForm.companyName.trim(), orgNumber: authForm.orgNumber.trim(), invoiceEmail: authForm.invoiceEmail?.trim() || '' });
       setAuthOpen(false);
       setAuthError('');
       setAuthForm({ accountType: 'private', name: '', email: '', password: '', phone: '', address: '', companyName: '', orgNumber: '' });
@@ -6698,18 +6700,20 @@ export default function App() {
                     <input type="text" value={authForm.name} onChange={(e) => setAuthForm((f) => ({ ...f, name: e.target.value }))} placeholder={authForm.accountType === 'business' ? 'Kontaktperson' : 'Navn'} className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
                     {authForm.accountType === 'business' && (
                       <>
-                        <input type="text" value={authForm.companyName} onChange={(e) => setAuthForm((f) => ({ ...f, companyName: e.target.value }))} placeholder="Bedriftsnavn" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                        <input type="text" value={authForm.companyName} onChange={(e) => setAuthForm((f) => ({ ...f, companyName: e.target.value }))} placeholder="Bedriftsnavn *" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
                         <input type="text" value={authForm.orgNumber} onChange={(e) => setAuthForm((f) => ({ ...f, orgNumber: e.target.value }))} placeholder="Org.nummer (valgfritt)" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
                       </>
                     )}
                   </>
                 )}
-                <input type="email" value={authForm.email} onChange={(e) => setAuthForm((f) => ({ ...f, email: e.target.value }))} placeholder="E-post" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
-                <input type="password" value={authForm.password} onChange={(e) => setAuthForm((f) => ({ ...f, password: e.target.value }))} placeholder="Passord" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                <input type="email" value={authForm.email} onChange={(e) => setAuthForm((f) => ({ ...f, email: e.target.value }))} placeholder="E-post *" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                <input type="password" value={authForm.password} onChange={(e) => setAuthForm((f) => ({ ...f, password: e.target.value }))} placeholder="Passord (min. 8 tegn) *" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
                 {authMode === 'register' && (
                   <>
-                    <input type="tel" value={authForm.phone} onChange={(e) => setAuthForm((f) => ({ ...f, phone: e.target.value }))} placeholder="Telefon (valgfritt)" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
-                    <input type="text" value={authForm.address} onChange={(e) => setAuthForm((f) => ({ ...f, address: e.target.value }))} placeholder="Leveringsadresse (valgfritt)" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                    <input type="tel" value={authForm.phone} onChange={(e) => setAuthForm((f) => ({ ...f, phone: e.target.value }))} placeholder="Telefon *" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                    {authForm.accountType === 'business' && (
+                      <input type="email" value={authForm.invoiceEmail || ''} onChange={(e) => setAuthForm((f) => ({ ...f, invoiceEmail: e.target.value }))} placeholder="Faktura e-post (valgfritt)" className="rounded-lg px-3 py-2.5 text-sm focus-ring" style={{ border: `1px solid ${C.line}`, background: '#fff' }} />
+                    )}
                   </>
                 )}
                 {authError && <p className="text-sm" style={{ color: C.coral }}>{authError}</p>}
